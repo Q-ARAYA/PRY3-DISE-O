@@ -1,0 +1,251 @@
+/* Clase para screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.footer {
+  background-color: #2d3436;
+  color: #dfe6e9;
+  padding: 3rem 2rem 1rem;
+  margin-top: 4rem;
+}
+
+.footer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.footer-main {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer-section h3 {
+  color: #27AE60;
+  font-size: 1.5rem;
+  margin: 0 0 1rem 0;
+}
+
+.footer-section h4 {
+  color: #ffffff;
+  font-size: 1.125rem;
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+}
+
+.footer-section p {
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+  color: #b2bec3;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 0.75rem;
+}
+
+.footer-section ul li a {
+  color: #dfe6e9;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  display: inline-block;
+  padding: 0.25rem 0;
+}
+
+.footer-section ul li a:hover {
+  color: #27AE60;
+}
+
+.footer-section ul li a:focus {
+  outline: 2px solid #27AE60;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Redes sociales */
+.footer-social {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.footer-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background-color: #636e72;
+  border-radius: 50%;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.footer-social a:hover {
+  background-color: #27AE60;
+  transform: translateY(-2px);
+}
+
+.footer-social a:focus {
+  outline: 3px solid #27AE60;
+  outline-offset: 2px;
+}
+
+/* Newsletter */
+.newsletter-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.newsletter-form input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #636e72;
+  border-radius: 6px;
+  background-color: #636e72;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.newsletter-form input::placeholder {
+  color: #b2bec3;
+}
+
+.newsletter-form input:focus {
+  outline: 2px solid #27AE60;
+  outline-offset: 2px;
+  background-color: #4a5357;
+}
+
+.newsletter-form button {
+  padding: 0.75rem 1.5rem;
+  background-color: #27AE60;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.newsletter-form button:hover {
+  background-color: #229954;
+}
+
+.newsletter-form button:focus {
+  outline: 3px solid #27AE60;
+  outline-offset: 2px;
+}
+
+/* Métodos de pago */
+.footer-payment {
+  padding: 2rem 0;
+  border-top: 1px solid #636e72;
+  border-bottom: 1px solid #636e72;
+}
+
+.footer-payment h4 {
+  color: #ffffff;
+  margin: 0 0 1rem 0;
+}
+
+.payment-methods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.payment-icon {
+  background-color: #636e72;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* Footer bottom */
+.footer-bottom {
+  padding: 2rem 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-bottom p {
+  margin: 0;
+  color: #b2bec3;
+}
+
+.footer-legal {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.footer-legal a {
+  color: #dfe6e9;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  padding: 0.25rem 0;
+}
+
+.footer-legal a:hover {
+  color: #27AE60;
+}
+
+.footer-legal a:focus {
+  outline: 2px solid #27AE60;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer {
+    padding: 2rem 1rem 1rem;
+  }
+
+  .footer-main {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .newsletter-form {
+    flex-direction: column;
+  }
+
+  .newsletter-form button {
+    width: 100%;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-legal {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
