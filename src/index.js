@@ -1,13 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
+import { CuentaProvider } from './context/CuentaContext';
+import { CarritoProvider } from './context/CarritoContext';
 import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <CuentaProvider>
+      <CarritoProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </CarritoProvider>
+    </CuentaProvider>
   </React.StrictMode>
 );
 

@@ -62,6 +62,18 @@ export const CarritoProvider = ({ children }) => {
     carritoFachada.limpiarCarrito();
   };
 
+  const undo = () => {
+    return carritoFachada.undo();
+  };
+
+  const redo = () => {
+    return carritoFachada.redo();
+  };
+
+  const decorarProducto = (productoId, tipo) => {
+    return carritoFachada.decorarProducto(productoId, tipo);
+  };
+
   const estaVacio = () => {
     return carritoFachada.estaVacio();
   };
@@ -78,6 +90,9 @@ export const CarritoProvider = ({ children }) => {
     aplicarDescuento,
     procesarPago,
     limpiarCarrito,
+    undo,
+    redo,
+    decorarProducto,
     estaVacio
   };
 

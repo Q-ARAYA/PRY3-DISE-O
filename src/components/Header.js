@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Header.css';
 import { useCarrito } from '../context/CarritoContext';
+import { useCuenta } from '../context/CuentaContext';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -8,6 +10,7 @@ const Header = () => {
   const [searchExpanded, setSearchExpanded] = useState(false);
   const [headerLocked, setHeaderLocked] = useState(false);
   const { cantidadTotal } = useCarrito();
+  const { currentUser } = useCuenta();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,7 +63,7 @@ const Header = () => {
       <div className="header-container">
         {/* Logo */}
         <div className="header-logo" style={{ cursor: 'pointer' }}>
-          <h1>⚡ FlashMarket</h1>
+          <Link to="/" aria-label="Ir al inicio"><h1>⚡ FlashMarket</h1></Link>
         </div>
 
         {/* Barra de búsqueda */}
@@ -93,15 +96,15 @@ const Header = () => {
 
         {/* Navegación de usuario */}
         <nav className="header-nav" aria-label="Navegación principal">
-          <a href="/cuenta" className="header-icon" aria-label="Mi cuenta" onClick={handleHeaderClick}>
+          <Link to={currentUser ? '/cuenta' : '/login'} className="header-icon" aria-label="Mi cuenta" onClick={handleHeaderClick}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" strokeWidth="2"/>
               <circle cx="12" cy="7" r="4" strokeWidth="2"/>
             </svg>
             <span>Cuenta</span>
-          </a>
+          </Link>
 
-          <a href="/carrito" className="header-icon" aria-label={`Carrito de compras, ${cantidadTotal} artículos`} onClick={handleHeaderClick}>
+          <Link to="/carrito" className="header-icon" aria-label={`Carrito de compras, ${cantidadTotal} artículos`} onClick={handleHeaderClick}>
             <div className="cart-icon-wrapper">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <circle cx="9" cy="21" r="1" strokeWidth="2"/>
@@ -111,7 +114,7 @@ const Header = () => {
               <span className="cart-badge" aria-label="cantidad de artículos">{cantidadTotal}</span>
             </div>
             <span>Carrito</span>
-          </a>
+          </Link>
         </nav>
       </div>
     </header>

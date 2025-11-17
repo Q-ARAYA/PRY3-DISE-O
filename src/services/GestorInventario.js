@@ -9,6 +9,32 @@ class GestorInventario {
   }
 
   /**
+   * Obtener estado serializable del inventario (para mementos)
+   */
+  getEstadoInventario() {
+    const estado = [];
+    this.inventario.forEach((value, key) => {
+      estado.push({ id: key, disponible: value.disponible, stock: value.stock, reservado: value.reservado });
+    });
+    return estado;
+  }
+
+  /**
+   * Restaurar estado del inventario desde un snapshot
+   */
+  setEstadoInventario(estadoArray) {
+    this.inventario = new Map();
+    if (!Array.isArray(estadoArray)) return;
+    estadoArray.forEach(item => {
+      this.inventario.set(item.id, {
+        disponible: item.disponible,
+        stock: item.stock,
+        reservado: item.reservado
+      });
+    });
+  }
+
+  /**
    * Inicializar inventario de productos
    */
   inicializarInventario(productos) {

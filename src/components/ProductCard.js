@@ -1,10 +1,11 @@
 import React from 'react';
 import './ProductCard.css';
 import { useCarrito } from '../context/CarritoContext';
+import { Link } from 'react-router-dom';
 
 const ProductCard = ({ product }) => {
   const { id, name, price, originalPrice, rating, image, discount } = product;
-  const { agregarProducto } = useCarrito();
+  const { agregarProducto, productos: productosEnCarrito = [] } = useCarrito();
   
   // Compatibilidad con diferentes estructuras de datos
   const productName = name || product.nombre;
@@ -50,7 +51,20 @@ const ProductCard = ({ product }) => {
         </span>
       )}
 
-      <a href={`/producto/${id}`} className="product-image-link">
+      {/* Badge para indicar decoradores aplicados en el carrito */}
+      {(() => {
+        const item = productosEnCarrito.find(pi => String(pi.id) === String(id));
+        if (item && item.decoratorsApplied && item.decoratorsApplied.length > 0) {
+          return (
+            <span className="decorator-badge" aria-label="Opciones aplicadas">
+              ✨ Opciones
+            </span>
+          );
+        }
+        return null;
+      })()}
+
+      <Link to={`/producto/${id}`} className="product-image-link">
         <img
           src={productImage}
           alt={productName}
@@ -60,12 +74,12 @@ const ProductCard = ({ product }) => {
             e.target.src = 'https://via.placeholder.com/300x300/27AE60/ffffff?text=Producto';
           }}
         />
-      </a>
+      </Link>
 
       <div className="product-info">
-        <a href={`/producto/${id}`} className="product-name">
+        <Link to={`/producto/${id}`} className="product-name">
           <h3>{productName}</h3>
-        </a>
+        </Link>
 
         <div className="product-rating" role="img" aria-label={`Calificación: ${rating} de 5 estrellas`}>
           {renderStars(rating)}

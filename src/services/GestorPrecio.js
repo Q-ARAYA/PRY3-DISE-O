@@ -80,6 +80,13 @@ class GestorPrecio {
   }
 
   /**
+   * Reemplazar descuentos (útil para restaurar estados)
+   */
+  setDescuentos(descuentos) {
+    this.descuentos = descuentos ? [...descuentos] : [];
+  }
+
+  /**
    * Formatear precio a moneda
    */
   formatearPrecio(precio) {

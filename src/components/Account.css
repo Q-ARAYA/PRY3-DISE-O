@@ -1,0 +1,84 @@
+.account-page {
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.account-container {
+  display: flex;
+  width: 100%;
+  max-width: 980px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.account-side {
+  width: 180px;
+  background: linear-gradient(180deg,#f7fbf9,#eef7f1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+}
+
+.account-side button {
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 0.6rem 0.5rem;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.account-side button.active {
+  background: #27AE60;
+  color: white;
+  font-weight: 700;
+}
+
+.account-main {
+  flex: 1;
+  padding: 1.25rem;
+}
+
+.account-form {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 560px;
+}
+
+.account-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.95rem;
+}
+
+.account-form input {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #e6efe9;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.account-message {
+  background: #fff3cd;
+  border: 1px solid #ffeeba;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+}
+
+.orders-list { display:flex; flex-direction:column; gap:0.5rem; }
+.order-item { padding:0.75rem; border:1px solid #eef6ee; border-radius:8px; background:#fbfdfb }
+.order-header { display:flex; justify-content:space-between; margin-bottom:0.5rem }
+
+@media (max-width: 720px) {
+  .account-container { flex-direction: column; }
+  .account-side { width: 100%; flex-direction: row; gap: 0.5rem; padding: 0.5rem; }
+}
