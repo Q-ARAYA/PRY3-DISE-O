@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import './Carrito.css';
 import { useCarrito } from '../context/CarritoContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Carrito = () => {
+  const navigate = useNavigate();
   const {
     productos,
     subtotal,
@@ -14,7 +15,6 @@ const Carrito = () => {
     eliminarProducto,
     actualizarCantidad,
     aplicarDescuento,
-    procesarPago,
     undo,
     redo,
     estaVacio
@@ -22,7 +22,6 @@ const Carrito = () => {
 
   const [codigoDescuento, setCodigoDescuento] = useState('');
   const [mensajeDescuento, setMensajeDescuento] = useState('');
-  const [mostrarCheckout, setMostrarCheckout] = useState(false);
 
   const handleEliminar = (productoId) => {
     const resultado = eliminarProducto(productoId);
@@ -64,17 +63,9 @@ const Carrito = () => {
     setTimeout(() => setMensajeDescuento(''), 5000);
   };
 
-  
-
-  const handleProcesarPago = () => {
-    const resultado = procesarPago('Tarjeta de Crédito');
-    
-    if (resultado.exito) {
-      alert('¡Compra realizada exitosamente! Total: $' + resultado.resumen.total.toFixed(2));
-      setMostrarCheckout(false);
-    } else {
-      alert(resultado.mensaje);
-    }
+  const handleProcederPago = () => {
+    // Redirigir al checkout donde está implementado el patrón Bridge
+    navigate('/checkout');
   };
 
   if (estaVacio()) {
@@ -215,41 +206,17 @@ const Carrito = () => {
                 </div>
               </div>
 
-              {/* Botón de pago */}
-              <button className="btn-checkout" onClick={() => setMostrarCheckout(true)}>
+              {/* Botón de pago - Redirige a Checkout */}
+              <button className="btn-checkout" onClick={handleProcederPago}>
                 Proceder al Pago
               </button>
 
-              <a href="/" className="btn-seguir-comprando">
+              <Link to="/" className="btn-seguir-comprando">
                 Seguir Comprando
-              </a>
+              </Link>
             </aside>
           </div>
         </div>
-
-        {/* Modal de checkout */}
-        {mostrarCheckout && (
-          <div className="checkout-modal" onClick={() => setMostrarCheckout(false)}>
-            <div className="checkout-content" onClick={(e) => e.stopPropagation()}>
-              <h2>Confirmar Compra</h2>
-              <p>¿Deseas proceder con el pago?</p>
-              
-              <div className="checkout-total">
-                <span>Total a pagar:</span>
-                <strong>${total.toFixed(2)}</strong>
-              </div>
-
-              <div className="checkout-acciones">
-                <button className="btn-cancelar" onClick={() => setMostrarCheckout(false)}>
-                  Cancelar
-                </button>
-                <button className="btn-confirmar" onClick={handleProcesarPago}>
-                  Confirmar Pago
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </main>
   );
 };

@@ -28,13 +28,6 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleHeaderClick = (e) => {
-    if (isScrolled) {
-      e.preventDefault();
-      setHeaderLocked(true);
-    }
-  };
-
   const handleMouseEnter = () => {
     if (isScrolled) {
       setHeaderLocked(true);
@@ -62,8 +55,10 @@ const Header = () => {
     >
       <div className="header-container">
         {/* Logo */}
-        <div className="header-logo" style={{ cursor: 'pointer' }}>
-          <Link to="/" aria-label="Ir al inicio"><h1>⚡ FlashMarket</h1></Link>
+        <div className="header-logo">
+          <Link to="/" aria-label="Ir al inicio">
+            <h1>⚡ FlashMarket</h1>
+          </Link>
         </div>
 
         {/* Barra de búsqueda */}
@@ -96,7 +91,11 @@ const Header = () => {
 
         {/* Navegación de usuario */}
         <nav className="header-nav" aria-label="Navegación principal">
-          <Link to={currentUser ? '/cuenta' : '/login'} className="header-icon" aria-label="Mi cuenta" onClick={handleHeaderClick}>
+          <Link 
+            to={currentUser ? '/cuenta' : '/login'} 
+            className="header-icon" 
+            aria-label="Mi cuenta"
+          >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" strokeWidth="2"/>
               <circle cx="12" cy="7" r="4" strokeWidth="2"/>
@@ -104,7 +103,11 @@ const Header = () => {
             <span>Cuenta</span>
           </Link>
 
-          <Link to="/carrito" className="header-icon" aria-label={`Carrito de compras, ${cantidadTotal} artículos`} onClick={handleHeaderClick}>
+          <Link 
+            to="/carrito" 
+            className="header-icon" 
+            aria-label={`Carrito de compras, ${cantidadTotal} artículos`}
+          >
             <div className="cart-icon-wrapper">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <circle cx="9" cy="21" r="1" strokeWidth="2"/>

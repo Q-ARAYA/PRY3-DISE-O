@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import carritoFachada from '../services/CarritoFachada';
+import carritoFachada from '../services/fachada/CarritoFachada';
 
 // Crear el contexto
 const CarritoContext = createContext();

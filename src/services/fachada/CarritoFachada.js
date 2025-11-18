@@ -1,32 +1,39 @@
 import GestorProductos from './GestorProductos';
 import GestorPrecio from './GestorPrecio';
 import GestorInventario from './GestorInventario';
-import { ProductDecorator } from './ProductDecorator';
+import { ProductDecorator } from '../decorator/ProductDecorator';
+import { CarritoMemento, CarritoCaretaker } from '../memento/CarritoMemento';
 
 /**
- * CarritoFachada - Patrón Fachada
+ * CarritoFachada - Patrón Fachada + Patrón Memento (Originator)
  * 
+ * PATRÓN FACHADA:
  * Simplifica la interacción con el sistema de carrito de compras
  * ocultando la complejidad de múltiples gestores (Productos, Precio, Inventario)
+ * 
+ * PATRÓN MEMENTO:
+ * Actúa como Originator - crea y restaura mementos del estado del carrito
+ * permitiendo funcionalidad de deshacer/rehacer.
  * 
  * Este patrón proporciona una interfaz unificada y simple para:
  * - Agregar/eliminar productos
  * - Calcular totales y precios
  * - Verificar disponibilidad
  * - Procesar pagos
+ * - Deshacer/Rehacer acciones (Memento)
  */
 class CarritoFachada {
   constructor() {
-    // Subsistemas internos
+    // Subsistemas internos (Fachada)
     this.gestorProductos = new GestorProductos();
     this.gestorPrecio = new GestorPrecio();
     this.gestorInventario = new GestorInventario();
     
     // Suscriptores para notificar cambios
     this.suscriptores = [];
-    // Memento stacks
-    this._past = []; // snapshots anteriores
-    this._future = []; // snapshots para redo
+    
+    // Patrón Memento - Caretaker para gestionar historial
+    this._caretaker = new CarritoCaretaker();
   }
 
   /**
@@ -252,96 +259,99 @@ class CarritoFachada {
   }
 
   /**
-   * Guardar snapshot del estado actual (memento)
+   * Guardar snapshot del estado actual (Patrón Memento - Originator)
+   * Crea un memento con el estado actual y lo entrega al Caretaker
    */
   _saveSnapshot() {
     try {
-      // Construimos un snapshot consistente que incluya inventario
-      const snapshot = {
+      // Capturar estado actual de todos los subsistemas
+      const estado = {
         productos: this.gestorProductos.obtenerProductos().map(p => ({ ...p })),
         descuentosAplicados: this.gestorPrecio.obtenerDescuentos ? this.gestorPrecio.obtenerDescuentos() : [],
         inventario: this.gestorInventario.getEstadoInventario ? this.gestorInventario.getEstadoInventario() : []
       };
-      // Guardamos copia profunda
-      this._past.push(JSON.parse(JSON.stringify(snapshot)));
-      // limpiar pila de redo
-      this._future = [];
-      // limitamos tamaño para evitar crecimiento descontrolado
-      if (this._past.length > 50) this._past.shift();
+
+      // Crear memento y entregarlo al Caretaker
+      const memento = new CarritoMemento(estado);
+      this._caretaker.guardar(memento);
     } catch (e) {
-      // ignore
+      console.error('Error al guardar snapshot:', e);
     }
   }
 
   /**
-   * Restaurar un snapshot previo
+   * Restaurar un memento (Patrón Memento - Originator)
+   * Extrae el estado del memento y lo aplica a los subsistemas
    */
-  _restoreSnapshot(snapshot) {
-    if (!snapshot) return;
-    // Restauramos productos y descuentos
-    if (snapshot.productos) {
-      this.gestorProductos.setProductos(snapshot.productos.map(p => ({ ...p })));
-    }
-    if (snapshot.descuentosAplicados) {
-      if (this.gestorPrecio.setDescuentos) {
-        this.gestorPrecio.setDescuentos(snapshot.descuentosAplicados);
+  _restoreSnapshot(memento) {
+    if (!memento) return;
+
+    try {
+      const estado = memento.obtenerEstado();
+
+      // Restaurar productos
+      if (estado.productos) {
+        this.gestorProductos.setProductos(estado.productos.map(p => ({ ...p })));
       }
+
+      // Restaurar descuentos
+      if (estado.descuentosAplicados && this.gestorPrecio.setDescuentos) {
+        this.gestorPrecio.setDescuentos(estado.descuentosAplicados);
+      }
+
+      // Restaurar inventario
+      if (estado.inventario && this.gestorInventario.setEstadoInventario) {
+        this.gestorInventario.setEstadoInventario(estado.inventario);
+      }
+
+      // Notificar cambios a la UI
+      this.notificar();
+    } catch (e) {
+      console.error('Error al restaurar snapshot:', e);
     }
-    // Restaurar inventario si viene en el snapshot
-    if (snapshot.inventario && this.gestorInventario.setEstadoInventario) {
-      this.gestorInventario.setEstadoInventario(snapshot.inventario);
-    }
-    // Notificamos a UI
-    this.notificar();
   }
 
   /**
-   * Deshacer la última acción
+   * Deshacer la última acción (Patrón Memento)
+   * Solicita al Caretaker el memento anterior y lo restaura
    */
   undo() {
-    if (this._past.length === 0) {
+    if (!this._caretaker.puedeDeshacer()) {
       return { exito: false, mensaje: 'Nada para deshacer' };
     }
 
-    // Guardar estado actual en future
-    try {
-      const actualSnapshot = {
-        productos: this.gestorProductos.obtenerProductos().map(p => ({ ...p })),
-        descuentosAplicados: this.gestorPrecio.obtenerDescuentos ? this.gestorPrecio.obtenerDescuentos() : [],
-        inventario: this.gestorInventario.getEstadoInventario ? this.gestorInventario.getEstadoInventario() : []
-      };
-      this._future.push(JSON.parse(JSON.stringify(actualSnapshot)));
-    } catch (e) {}
+    const memento = this._caretaker.obtenerAnterior();
+    if (memento) {
+      this._restoreSnapshot(memento);
+      return { exito: true, mensaje: '⏪ Acción deshecha' };
+    }
 
-    // Tomar último snapshot del past y restaurarlo
-    const snapshot = this._past.pop();
-    this._restoreSnapshot(snapshot);
-
-    return { exito: true, mensaje: 'Acción deshecha' };
+    return { exito: false, mensaje: 'No se pudo deshacer' };
   }
 
   /**
-   * Rehacer la última acción deshecha
+   * Rehacer la última acción deshecha (Patrón Memento)
+   * Solicita al Caretaker el memento siguiente y lo restaura
    */
   redo() {
-    if (this._future.length === 0) {
+    if (!this._caretaker.puedeRehacer()) {
       return { exito: false, mensaje: 'Nada para rehacer' };
     }
 
-    // Guardar estado actual en past
-    try {
-      const actualSnapshot = {
-        productos: this.gestorProductos.obtenerProductos().map(p => ({ ...p })),
-        descuentosAplicados: this.gestorPrecio.obtenerDescuentos ? this.gestorPrecio.obtenerDescuentos() : [],
-        inventario: this.gestorInventario.getEstadoInventario ? this.gestorInventario.getEstadoInventario() : []
-      };
-      this._past.push(JSON.parse(JSON.stringify(actualSnapshot)));
-    } catch (e) {}
+    const memento = this._caretaker.obtenerSiguiente();
+    if (memento) {
+      this._restoreSnapshot(memento);
+      return { exito: true, mensaje: '⏩ Acción rehecha' };
+    }
 
-    const snapshot = this._future.pop();
-    this._restoreSnapshot(snapshot);
+    return { exito: false, mensaje: 'No se pudo rehacer' };
+  }
 
-    return { exito: true, mensaje: 'Acción rehecha' };
+  /**
+   * Obtener estadísticas del historial (útil para debugging)
+   */
+  obtenerEstadisticasHistorial() {
+    return this._caretaker.obtenerEstadisticas();
   }
 
   /**
