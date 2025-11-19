@@ -28,11 +28,11 @@ const Login = () => {
           <h2>Iniciar sesión</h2>
           {msg && <div className="account-message">{msg}</div>}
           <form className="account-form" onSubmit={handleSubmit}>
-            <label>Email<input name="email" value={form.email} onChange={handleChange} /></label>
-            <label>Contraseña<input name="password" type="password" value={form.password} onChange={handleChange} /></label>
+            <label>Email<input className="form-input" name="email" value={form.email} onChange={handleChange} placeholder="tu@correo.com" /></label>
+            <label>Contraseña<input className="form-input" name="password" type="password" value={form.password} onChange={handleChange} placeholder="Contraseña" /></label>
             <div className="form-actions">
-              <button type="submit">Ingresar</button>
-              <Link to="/register"><button type="button">Crear cuenta</button></Link>
+              <button type="submit" className="btn btn-primary">Ingresar</button>
+              <Link to="/register" className="btn btn-secondary">Crear cuenta</Link>
             </div>
           </form>
         </section>

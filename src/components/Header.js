@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Header.css';
 import { useCarrito } from '../context/CarritoContext';
 import { useCuenta } from '../context/CuentaContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -11,6 +11,7 @@ const Header = () => {
   const [headerLocked, setHeaderLocked] = useState(false);
   const { cantidadTotal } = useCarrito();
   const { currentUser } = useCuenta();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,8 +43,14 @@ const Header = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log('Buscando:', searchTerm);
-    // Aquí implementaremos la búsqueda más adelante
+    const q = (searchTerm || '').trim();
+    if (!q) return;
+
+    // slugify: remove apostrophes, lower, replace spaces with hyphens
+    const slug = q.replace(/'/g, '').toLowerCase().replace(/\s+/g, '-');
+    // Navigate to category/search handler which will perform category or text search
+    navigate(`/categorias/${encodeURIComponent(slug)}`);
+    setSearchTerm('');
   };
 
   return (

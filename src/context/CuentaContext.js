@@ -59,6 +59,9 @@ export const CuentaProvider = ({ children }) => {
         email: _normalizeEmail(u.email),
       }));
 
+      // ensure role exists
+      loadedUsers = loadedUsers.map(u => ({ ...u, role: u.role || 'buyer' }));
+
       setUsers(loadedUsers);
       setCurrentUserId(loadedCurrentUserId);
     } catch (e) {}
@@ -71,7 +74,7 @@ export const CuentaProvider = ({ children }) => {
   const fullCurrentUser = _getFullCurrentUser();
   const publicCurrentUser = _publicUser(fullCurrentUser);
 
-  const register = ({ nombre, email, password }) => {
+  const register = ({ nombre, email, password, role = 'buyer' }) => {
     const emailNorm = _normalizeEmail(email);
     const passNorm = _normalizePassword(password);
 
@@ -88,6 +91,7 @@ export const CuentaProvider = ({ children }) => {
       nombre: (nombre || '').trim() || 'Usuario',
       email: emailNorm,
       password: passNorm,
+      role,
       direccion: '',
       direcciones: [],
       pedidos: [],
@@ -269,6 +273,10 @@ export const CuentaProvider = ({ children }) => {
     _saveSnapshot();
 
     const updatedFull = { ...fullCurrentUser, ...datos };
+    // if role changed ensure it's allowed value
+    if (updatedFull.role && !['buyer', 'seller'].includes(updatedFull.role)) {
+      updatedFull.role = 'buyer';
+    }
     const newUsers = users.map(u =>
       u.id === updatedFull.id ? updatedFull : u
     );
@@ -347,6 +355,16 @@ export const CuentaProvider = ({ children }) => {
     return { exito: true, pedido };
   };
 
+  const promoteToSeller = () => {
+    if (!fullCurrentUser) return { exito: false, mensaje: 'No autenticado' };
+
+    const updatedFull = { ...fullCurrentUser, role: 'seller' };
+    const newUsers = users.map(u => u.id === updatedFull.id ? updatedFull : u);
+    setUsers(newUsers);
+    _persist(newUsers, currentUserId);
+    return { exito: true };
+  };
+
   const getOrders = () => {
     return fullCurrentUser ? (fullCurrentUser.pedidos || []) : [];
   };
@@ -368,6 +386,7 @@ export const CuentaProvider = ({ children }) => {
         updateShippingAddress,
         removeShippingAddress,
         setDefaultShipping,
+        promoteToSeller,
       }}
     >
       {children}

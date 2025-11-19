@@ -5,7 +5,9 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import Categories from './components/Categories';
 import ProductSection from './components/ProductSection';
+import CategoryPage from './components/CategoryPage';
 import Footer from './components/Footer';
+import SellerPublish from './components/SellerPublish';
 import Carrito from './components/Carrito';
 import ProductDetails from './components/ProductDetails';
 import Checkout from './components/Checkout';
@@ -76,22 +78,25 @@ function App() {
                 ) : (
                   <>
                     {electronics.length > 0 && (
-                      <ProductSection title="Electrónicos" products={electronics} />
+                      <ProductSection title="Electrónicos" products={electronics} categorySlug="electronics" />
                     )}
                     {jewelery.length > 0 && (
-                      <ProductSection title="Joyería" products={jewelery} />
+                      <ProductSection title="Joyería" products={jewelery} categorySlug="jewelery" />
                     )}
                     {mensClothing.length > 0 && (
-                      <ProductSection title="Ropa de Hombre" products={mensClothing} />
+                      <ProductSection title="Ropa de Hombre" products={mensClothing} categorySlug={"mens-clothing"} />
                     )}
                     {womensClothing.length > 0 && (
-                      <ProductSection title="Ropa de Mujer" products={womensClothing} />
+                      <ProductSection title="Ropa de Mujer" products={womensClothing} categorySlug={"womens-clothing"} />
                     )}
                   </>
                 )}
               </>
             )}
           />
+
+          <Route path="/categorias/:slug" element={<CategoryPage />} />
+          <Route path="/vendedor/publicar" element={<SellerPublish />} />
 
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/producto/:id" element={<ProductDetails />} />

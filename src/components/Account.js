@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useCuenta } from '../context/CuentaContext';
 import { useNavigate } from 'react-router-dom';
 import './Account.css';
 
 const Account = () => {
   const { currentUser, logout, getOrders, addShippingAddress, removeShippingAddress, setDefaultShipping } = useCuenta();
+  const { promoteToSeller } = useCuenta();
   const navigate = useNavigate();
   const [adding, setAdding] = React.useState(false);
   const [addrForm, setAddrForm] = React.useState({ label: '', line1: '', city: '', postal: '', country: '', phone: '' });
@@ -22,14 +23,11 @@ const Account = () => {
     }
   };
 
-  if (!currentUser) {
-    return (
-      <main style={{ padding: '2rem' }}>
-        <h2>Debes iniciar sesión</h2>
-        <p>Por favor ve a la página de <a href="/login">iniciar sesión</a> o <a href="/register">registrarte</a>.</p>
-      </main>
-    );
-  }
+  useEffect(() => {
+    if (!currentUser) navigate('/');
+  }, [currentUser, navigate]);
+
+  if (!currentUser) return null;
 
   return (
     <main className="account-page">
@@ -61,6 +59,20 @@ const Account = () => {
                   <div>Total: ${o.total?.toFixed ? o.total.toFixed(2) : (o.total || 0)}</div>
                 </div>
               ))
+            )}
+          </section>
+
+          <section style={{ marginTop: '1rem' }}>
+            <h3>Vendedor</h3>
+            {currentUser.role === 'seller' ? (
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button onClick={() => navigate('/vendedor/publicar')}>Publicar producto</button>
+              </div>
+            ) : (
+              <div>
+                <p style={{ color: '#666' }}>No eres vendedor aún.</p>
+                <button onClick={() => { const r = promoteToSeller(); if (r.exito) window.location.reload(); }}>Convertirme en vendedor</button>
+              </div>
             )}
           </section>
 

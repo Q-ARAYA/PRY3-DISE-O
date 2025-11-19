@@ -61,6 +61,11 @@ const Checkout = () => {
     }
   }, [currentUser, selectedAddr]);
 
+  // Redirect unauthenticated users away from checkout (do not show the login message)
+  useEffect(() => {
+    if (!currentUser) navigate('/');
+  }, [currentUser, navigate]);
+
   const handleAddrChange = (e) => {
     const { name, value } = e.target;
     setAddrForm(prev => ({ ...prev, [name]: value }));
@@ -196,18 +201,8 @@ const Checkout = () => {
     }
   };
 
-  // 👇 ESTE return ya es DESPUÉS de TODAS las llamadas a hooks
-  if (!currentUser) {
-    return (
-      <div style={{ padding: '2rem' }}>
-        <h2>Checkout</h2>
-        <p>
-          Debes iniciar sesión para completar tu compra.{' '}
-          <Link to="/login">Iniciar sesión</Link>
-        </p>
-      </div>
-    );
-  }
+  // 👇 Si no hay usuario, ya estamos redirigiendo en useEffect; no mostrar mensaje
+  if (!currentUser) return null;
 
   return (
     <div className="checkout-container">

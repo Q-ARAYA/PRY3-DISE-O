@@ -1,7 +1,8 @@
 .account-page {
-  padding: 2rem;
+  padding: 2rem 1rem;
   display: flex;
   justify-content: center;
+  background: #f6f8f9;
 }
 
 .account-container {
@@ -12,6 +13,7 @@
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.06);
   overflow: hidden;
+  padding: 0.5rem;
 }
 
 .account-side {
@@ -40,7 +42,7 @@
 
 .account-main {
   flex: 1;
-  padding: 1.25rem;
+  padding: 1.25rem 1.5rem;
 }
 
 .account-form {
@@ -56,10 +58,67 @@
 }
 
 .account-form input {
-  padding: 0.5rem 0.75rem;
+  padding: 0.6rem 0.9rem;
   border-radius: 8px;
   border: 1px solid #e6efe9;
+  background: #fbfdfc;
 }
+
+.account-form input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(39,174,96,0.08);
+  border-color: #27AE60;
+}
+
+/* Button system */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+.btn:disabled { opacity: 0.65; cursor: not-allowed }
+.btn-primary {
+  background: #27AE60;
+  color: #fff;
+  border-color: #219652;
+}
+.btn-secondary {
+  background: #fff;
+  color: #333;
+  border: 1px solid #e6eef0;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+/* messages */
+.account-message {
+  background: #fff3cd;
+  border: 1px solid #ffeeba;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+}
+
+/* Tweak buttons across account pages for a consistent look */
+.account-main button {
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: #f2f6f4;
+  cursor: pointer;
+}
+.account-main button:hover { transform: translateY(-1px) }
 
 .form-actions {
   display: flex;

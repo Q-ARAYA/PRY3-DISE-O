@@ -1,24 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCuenta } from '../context/CuentaContext';
 
 const HistorialPedidos = () => {
   const { currentUser, getOrders } = useCuenta();
+  const navigate = useNavigate();
 
   console.log('[Historial] currentUser = ', currentUser);
   console.log('[Historial] pedidos = ', getOrders());
 
-  if (!currentUser) {
-    return (
-      <div style={{ padding: '2rem' }}>
-        <h2>Historial de Pedidos</h2>
-        <p>
-          Debes iniciar sesión para ver tu historial.{' '}
-          <a href="/login">Iniciar sesión</a> o{' '}
-          <a href="/register">crear cuenta</a>.
-        </p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!currentUser) navigate('/');
+  }, [currentUser, navigate]);
+
+  if (!currentUser) return null;
 
   const pedidos = (getOrders() || []).slice().reverse();
 

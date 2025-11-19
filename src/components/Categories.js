@@ -1,74 +1,65 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Categories.css';
+import { ProductosAPI } from '../services/ProductosAPI';
+
+const displayMap = {
+  electronics: 'Electrónica',
+  jewelery: 'Joyería',
+  "men's clothing": 'Ropa de Hombre',
+  "women's clothing": 'Ropa de Mujer'
+};
+
+const iconMap = {
+  electronics: '💻',
+  jewelery: '💍',
+  "men's clothing": '👔',
+  "women's clothing": '👗'
+};
+
+const slugifyApiCategory = (apiCategory) => {
+  // remove apostrophes, lower, replace spaces with hyphens
+  return apiCategory.replace(/'/g, '').toLowerCase().replace(/\s+/g, '-');
+};
 
 const Categories = () => {
-  const categories = [
-    {
-      id: 1,
-      name: 'Electrónica',
-      icon: '💻',
-      link: '/categorias/electronica',
-      description: 'Computadoras, celulares y más'
-    },
-    {
-      id: 2,
-      name: 'Ropa',
-      icon: '👕',
-      link: '/categorias/ropa',
-      description: 'Moda para toda la familia'
-    },
-    {
-      id: 3,
-      name: 'Hogar',
-      icon: '🏠',
-      link: '/categorias/hogar',
-      description: 'Muebles y decoración'
-    },
-    {
-      id: 4,
-      name: 'Deportes',
-      icon: '⚽',
-      link: '/categorias/deportes',
-      description: 'Equipo deportivo y fitness'
-    },
-    {
-      id: 5,
-      name: 'Libros',
-      icon: '📚',
-      link: '/categorias/libros',
-      description: 'Literatura y más'
-    },
-    {
-      id: 6,
-      name: 'Juguetes',
-      icon: '🎮',
-      link: '/categorias/juguetes',
-      description: 'Diversión para todas las edades'
-    }
-  ];
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const cargar = async () => {
+      try {
+        const cats = await ProductosAPI.obtenerCategorias();
+        setCategories(cats || []);
+      } catch (error) {
+        console.error('Error cargando categorías:', error);
+        setCategories([]);
+      }
+    };
+
+    cargar();
+  }, []);
 
   return (
     <section className="categories" aria-labelledby="categories-title">
       <div className="categories-container">
-        <h2 id="categories-title" className="section-title">
-          Explora por Categoría
-        </h2>
+        <h2 id="categories-title" className="section-title">Explora por Categoría</h2>
 
         <div className="categories-grid">
-          {categories.map((category) => (
-            <a
-              key={category.id}
-              href={category.link}
-              className="category-card"
-              aria-label={`${category.name} - ${category.description}`}
-            >
-              <div className="category-icon" aria-hidden="true">
-                {category.icon}
-              </div>
-              <h3>{category.name}</h3>
-              <p>{category.description}</p>
-            </a>
-          ))}
+          {categories.map((cat) => {
+            const name = displayMap[cat] || cat.replace(/\b\w/g, l => l.toUpperCase());
+            const icon = iconMap[cat] || '📦';
+            const slug = slugifyApiCategory(cat);
+
+            return (
+              <Link key={cat} to={`/categorias/${encodeURIComponent(slug)}`} className="category-card" aria-label={`${name}`}>
+                <div className="category-icon" aria-hidden="true">
+                  {icon}
+                </div>
+                <h3>{name}</h3>
+                <p className="category-sub">{cat}</p>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>
