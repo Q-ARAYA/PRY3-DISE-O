@@ -237,4 +237,39 @@ export const ProductosAPI = {
       return { exito: false, mensaje: 'Error al publicar' };
     }
   }
+,
+  editarProductoPublicado: async (producto) => {
+    try {
+      const local = _loadLocal();
+      const idx = local.findIndex(p => String(p.id) === String(producto.id));
+      if (idx === -1) return { exito: false, mensaje: 'Producto no encontrado' };
+      // Only allow editing if sellerId matches (basic client-side check)
+      if (local[idx].sellerId && producto.sellerId && String(local[idx].sellerId) !== String(producto.sellerId)) {
+        return { exito: false, mensaje: 'No autorizado' };
+      }
+      const updated = { ...local[idx], ...producto, fechaModificacion: new Date().toISOString() };
+      local[idx] = updated;
+      _saveLocal(local);
+      return { exito: true, producto: updated };
+    } catch (error) {
+      console.error('Error editando producto:', error);
+      return { exito: false, mensaje: 'Error al editar' };
+    }
+  },
+  eliminarProductoPublicado: async (id, sellerId) => {
+    try {
+      const local = _loadLocal();
+      const idx = local.findIndex(p => String(p.id) === String(id));
+      if (idx === -1) return { exito: false, mensaje: 'Producto no encontrado' };
+      if (local[idx].sellerId && sellerId && String(local[idx].sellerId) !== String(sellerId)) {
+        return { exito: false, mensaje: 'No autorizado' };
+      }
+      const next = local.filter(p => String(p.id) !== String(id));
+      _saveLocal(next);
+      return { exito: true };
+    } catch (error) {
+      console.error('Error eliminando producto:', error);
+      return { exito: false, mensaje: 'Error al eliminar' };
+    }
+  }
 };

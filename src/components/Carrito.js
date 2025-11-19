@@ -17,7 +17,8 @@ const Carrito = () => {
     aplicarDescuento,
     undo,
     redo,
-    estaVacio
+    estaVacio,
+    quitarDecorador
   } = useCarrito();
 
   const [codigoDescuento, setCodigoDescuento] = useState('');
@@ -113,7 +114,13 @@ const Carrito = () => {
                     {producto.decoratorsApplied && producto.decoratorsApplied.length > 0 && (
                       <div className="item-decorators">
                         {producto.decoratorsApplied.map((d, i) => (
-                          <span key={i} className="badge">{d.tipo}</span>
+                          <span key={i} className="badge" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                            <span>{d.tipo}</span>
+                            <button title="Quitar decorador" onClick={async () => {
+                              const res = await quitarDecorador(producto.cartItemId || producto.id, d.tipo);
+                              if (!res?.exito) alert(res?.mensaje || 'No se pudo quitar el decorador');
+                            }} style={{ background: 'transparent', border: 'none', color: '#b00000', cursor: 'pointer' }}>✕</button>
+                          </span>
                         ))}
                       </div>
                     )}

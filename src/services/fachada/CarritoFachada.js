@@ -363,9 +363,9 @@ class CarritoFachada {
    * `tipos` puede ser un string (un solo decorador) o un array de strings
    */
   decorarProducto(productoId, tipos) {
+    // Apply decorators directly to the existing cart line (single-line model).
     const productos = this.gestorProductos.obtenerProductos();
-    // Buscar item por cartItemId o por baseId (primera coincidencia)
-    const original = productos.find(p => p.cartItemId === productoId) || productos.find(p => p.baseId === productoId);
+    const original = productos.find(p => p.cartItemId === productoId) || productos.find(p => p.baseId === productoId || p.id === productoId);
 
     if (!original) {
       return { exito: false, mensaje: 'Producto no encontrado' };
@@ -373,67 +373,77 @@ class CarritoFachada {
 
     const tiposArray = Array.isArray(tipos) ? tipos : [tipos];
 
-    // Guardar snapshot antes de modificar
-    this._saveSnapshot();
+    // Rebuild price starting from basePrice and apply requested decorators in order
+    const basePrice = original.basePrice !== undefined ? Number(original.basePrice) : Number(original.price || 0);
+    let rebuilt = { nombre: original.nombre, name: original.name || original.nombre, imagen: original.imagen || original.image, price: basePrice, basePrice };
 
-    const baseId = original.baseId;
-
-    // Liberar una unidad temporalmente para poder re-reservar para la nueva línea
-    this.gestorInventario.liberarProducto(baseId, 1);
-
-    // Verificar disponibilidad para el nuevo ítem (1 unidad)
-    const disponibilidad = this.gestorInventario.verificarDisponibilidad(baseId, 1);
-    if (!disponibilidad.disponible) {
-      // Re-reservar la unidad liberada y abortar
-      this.gestorInventario.reservarProducto(baseId, 1);
-      return { exito: false, mensaje: 'No hay stock disponible para aplicar el decorador' };
+    for (const tipo of tiposArray) {
+      if (tipo === 'envio' || tipo === 'envio_rapido') rebuilt = ProductDecorator.aplicarEnvioRapido(rebuilt, 5);
+      else if (tipo === 'garantia') rebuilt = ProductDecorator.aplicarGarantiaExtendida(rebuilt, 10);
+      else if (tipo === 'envoltura') rebuilt = ProductDecorator.aplicarEnvolturaRegalo(rebuilt, 2);
     }
 
-    // Construir objeto base para decorar
-    const baseProduct = {
-      id: baseId,
-      name: original.nombre,
-      nombre: original.nombre,
-      image: original.imagen,
-      imagen: original.imagen,
-      basePrice: original.basePrice,
-      price: original.basePrice
-    };
+    const newDecorators = (rebuilt.decoratorsApplied || []).slice();
 
-    // Aplicar en secuencia todos los decoradores solicitados
-    let nuevoDecorado = ProductDecorator.ensureBasePrice(baseProduct);
-    for (const tipo of tiposArray) {
-      if (tipo === 'envio') {
-        nuevoDecorado = ProductDecorator.aplicarEnvioRapido(nuevoDecorado, 5);
-      } else if (tipo === 'garantia') {
-        nuevoDecorado = ProductDecorator.aplicarGarantiaExtendida(nuevoDecorado, 10);
-      } else if (tipo === 'envoltura') {
-        nuevoDecorado = ProductDecorator.aplicarEnvolturaRegalo(nuevoDecorado, 2);
-      } else if (tipo === 'quitar') {
-        nuevoDecorado = ProductDecorator.quitarDecoradores(nuevoDecorado);
-      } else {
-        // Ignorar tipos desconocidos
+    // Save snapshot, update the existing line's price and decoratorsApplied
+    this._saveSnapshot();
+    try {
+      this.gestorProductos.actualizarItem(original.cartItemId, {
+        price: rebuilt.price,
+        decoratorsApplied: newDecorators,
+        // keep current cantidad
+        cantidad: original.cantidad
+      });
+      this.notificar();
+      return { exito: true, mensaje: 'Decoradores aplicados' };
+    } catch (e) {
+      return { exito: false, mensaje: 'No se pudo aplicar decoradores' };
+    }
+  }
+
+  /**
+   * Quitar un decorador específico de una línea del carrito
+   * tipoToRemove debe coincidir con el campo `tipo` dentro de `decoratorsApplied` (p.ej. 'envio_rapido', 'garantia', 'envoltura')
+   */
+  quitarDecorador(cartItemId, tipoToRemove) {
+    const productos = this.gestorProductos.obtenerProductos();
+    const original = productos.find(p => p.cartItemId === cartItemId || p.id === cartItemId);
+    if (!original) return { exito: false, mensaje: 'Línea no encontrada' };
+    const applied = Array.isArray(original.decoratorsApplied) ? original.decoratorsApplied.slice() : [];
+    if (applied.length === 0) return { exito: false, mensaje: 'No hay decoradores aplicados' };
+
+    // Filtrar el decorador solicitado
+    const remaining = applied.filter(d => d.tipo !== tipoToRemove);
+
+    // Reconstruir producto base y reaplicar decoradores restantes
+    const basePrice = original.basePrice !== undefined ? Number(original.basePrice) : Number(original.price || 0);
+    let rebuilt = { nombre: original.nombre, name: original.name || original.nombre, imagen: original.imagen || original.image, price: basePrice, basePrice: basePrice };
+
+    for (const d of remaining) {
+      const t = (d.tipo || '').toLowerCase();
+      if (t.includes('envio')) {
+        rebuilt = ProductDecorator.aplicarEnvioRapido(rebuilt, d.valor || 5);
+      } else if (t.includes('garantia')) {
+        rebuilt = ProductDecorator.aplicarGarantiaExtendida(rebuilt, d.valor || 10);
+      } else if (t.includes('envoltura')) {
+        rebuilt = ProductDecorator.aplicarEnvolturaRegalo(rebuilt, d.valor || 2);
       }
     }
 
-    // Ajustamos cantidades: restar 1 de la línea original
-    if (original.cantidad > 1) {
-      this.gestorProductos.actualizarCantidad(original.cartItemId, original.cantidad - 1);
-    } else {
-      this.gestorProductos.eliminarProducto(original.cartItemId);
+    // Guardar snapshot
+    this._saveSnapshot();
+
+    // Actualizar la línea dentro del gestor de productos
+    try {
+      this.gestorProductos.actualizarItem(original.cartItemId, {
+        price: rebuilt.price,
+        decoratorsApplied: remaining
+      });
+      this.notificar();
+      return { exito: true, mensaje: 'Decorador eliminado' };
+    } catch (e) {
+      return { exito: false, mensaje: 'No se pudo actualizar la línea' };
     }
-
-    // Reservar para la nueva línea (ya verificamos disponibilidad)
-    this.gestorInventario.reservarProducto(baseId, 1);
-
-    // Agregar la nueva línea decorada (mergeIfSame = true para agrupar iguales)
-    this.gestorProductos.agregarProducto({
-      ...nuevoDecorado,
-      decoratorsApplied: nuevoDecorado.decoratorsApplied || []
-    }, 1, true);
-
-    this.notificar();
-    return { exito: true, mensaje: 'Producto decorado' };
   }
 
   /**
@@ -448,6 +458,17 @@ class CarritoFachada {
    */
   inicializarInventario(productos) {
     this.gestorInventario.inicializarInventario(productos);
+  }
+
+  /**
+   * Eliminar un producto del inventario (por ejemplo al borrar una publicación)
+   */
+  eliminarProductoInventario(productoId) {
+    try {
+      return this.gestorInventario.eliminarProducto(productoId);
+    } catch (e) {
+      return false;
+    }
   }
 
   /**

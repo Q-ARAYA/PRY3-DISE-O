@@ -12,9 +12,9 @@ class GestorProductos {
   }
 
   _makeGroupKey(baseId, decorators = []) {
-    const list = (decorators || []).slice().map(d => typeof d === 'string' ? d : JSON.stringify(d));
-    list.sort();
-    return `${baseId}::${list.join('|')}`;
+    // For this app we want a single line per base product regardless of decorators.
+    // Use only the baseId as the grouping key so additions merge into one line.
+    return String(baseId);
   }
 
   /**
@@ -86,6 +86,37 @@ class GestorProductos {
       producto.cantidad = cantidad;
     }
 
+    return this.productos;
+  }
+
+  /**
+   * Actualizar campos de un item del carrito (precio, decoratorsApplied, groupKey)
+   * Si existe otra línea con el mismo groupKey se hace merge de cantidades.
+   */
+  actualizarItem(cartItemId, updates = {}) {
+    const idx = this.productos.findIndex(p => p.cartItemId === cartItemId || p.id === cartItemId);
+    if (idx === -1) return this.productos;
+
+    const existing = { ...this.productos[idx] };
+    const nuevo = { ...existing, ...updates };
+
+    // Asegurar baseId
+    const baseId = nuevo.baseId || nuevo.id;
+    const decorators = nuevo.decoratorsApplied || [];
+    nuevo.groupKey = this._makeGroupKey(baseId, decorators);
+
+    // Intentar merge con otra línea existente (misma groupKey)
+    const otherIdx = this.productos.findIndex(p => p.groupKey === nuevo.groupKey && p.cartItemId !== existing.cartItemId);
+    if (otherIdx !== -1) {
+      // sumar cantidades
+      this.productos[otherIdx].cantidad += nuevo.cantidad;
+      // eliminar la línea original
+      this.productos.splice(idx, 1);
+      return this.productos;
+    }
+
+    // Reemplazar item
+    this.productos[idx] = { ...this.productos[idx], ...nuevo };
     return this.productos;
   }
 

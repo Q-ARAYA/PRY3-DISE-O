@@ -127,6 +127,17 @@ class GestorInventario {
     }
     return 0;
   }
+
+  /**
+   * Eliminar producto del inventario (al borrar publicación)
+   */
+  eliminarProducto(productoId) {
+    try {
+      return this.inventario.delete(productoId);
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
 export default GestorInventario;

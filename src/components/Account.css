@@ -110,6 +110,91 @@
   margin-bottom: 0.75rem;
 }
 
+/* Seller info card */
+.seller-card {
+  background: linear-gradient(180deg,#ffffff,#fbfffb);
+  border: 1px solid #e8f5ec;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(6,44,19,0.04);
+  max-width: 720px;
+}
+.seller-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+.seller-title { font-size: 1.05rem; font-weight: 700; color: #0b3d24 }
+.seller-sub { font-size: 0.88rem; color: #3b5a47 }
+.seller-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.seller-field label { display:block; font-size:0.85rem; color:#21402a; margin-bottom:6px }
+.seller-field input, .seller-field select { width:100%; padding:0.55rem 0.75rem; border-radius:8px; border:1px solid #e6efe9; background:#fff }
+.payout-badge { font-size:0.78rem; padding:0.3rem 0.55rem; background:#eef5ff; color:#083057; border-radius:999px; border:1px solid #d7e8ff }
+.seller-actions { display:flex; gap:0.5rem; align-items:center; margin-top:0.6rem }
+.helper-text { font-size:0.82rem; color:#45664f }
+
+@media (max-width:720px) {
+  .seller-grid { grid-template-columns: 1fr; }
+}
+
+/* Register form inputs and seller-card tweaks */
+.register-seller { padding: 0.75rem; }
+.form-input { padding: 0.6rem 0.8rem; border-radius: 8px; border: 1px solid #e6efe9; background: #fff; width: 100%; box-sizing: border-box }
+.register-seller .seller-title { font-size: 1rem; color: #083057; margin-bottom: 6px }
+.register-seller .seller-sub { font-size: 0.85rem; color: #445f58; margin-bottom: 10px }
+.register-seller label { display:block; margin-bottom: 8px }
+.register-seller .seller-grid { grid-template-columns: 1fr 1fr  }
+.register-seller .form-actions { margin-top: 12px }
+
+/* Published products list */
+.published-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 0.75rem;
+  border: 1px solid #eef6ee;
+  border-radius: 10px;
+  background: linear-gradient(180deg,#ffffff,#fbfffb);
+  margin-bottom: 10px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.published-item:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(6,44,19,0.06); }
+.published-thumb { width: 84px; height: 84px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: #f2f6f4; display:flex; align-items:center; justify-content:center }
+.published-thumb-img { width:100%; height:100%; object-fit:cover; display:block }
+.published-thumb-empty { width:100%; height:100%; background:#f2f6f4 }
+.published-info { flex:1; display:flex; flex-direction:column }
+.published-meta { display:flex; justify-content:space-between; align-items:center; gap:12px }
+.published-name { font-size:1rem; color:#073b29 }
+.published-price { font-weight:700; color:#2b6b3a }
+.published-cat { color:#637a6c; margin-top:6px; font-size:0.92rem }
+.published-actions { margin-top:8px; display:flex; gap:8px; align-items:center }
+.published-edit { display:flex; flex-direction:column; gap:8px }
+.published-edit input, .published-edit textarea { padding:0.55rem; border-radius:8px; border:1px solid #e6efe9 }
+.published-edit-actions { display:flex; gap:8px }
+.btn-danger { background: #ff6b6b; color:white; border-color:#e05555 }
+
+@media (max-width:720px) {
+  .published-item { flex-direction: row; gap: 10px }
+  .published-thumb { width: 64px; height:64px }
+  .published-meta { flex-direction:column; align-items:flex-start; gap:6px }
+  .published-actions { flex-wrap:wrap }
+}
+
+/* Ensure delete button appears active inside account layout (override broader button rules) */
+.account-main .btn-danger {
+  background: #ff6b6b;
+  color: #fff;
+  border-color: #e05555;
+  box-shadow: none;
+  opacity: 1;
+}
+.account-main .btn-danger:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
 /* Tweak buttons across account pages for a consistent look */
 .account-main button {
   padding: 0.5rem 0.8rem;
@@ -141,3 +226,92 @@
   .account-container { flex-direction: column; }
   .account-side { width: 100%; flex-direction: row; gap: 0.5rem; padding: 0.5rem; }
 }
+
+/* Switch control for seller registration */
+.switch-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 26px;
+}
+.switch-input {
+.account-form .switch-row {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.switch-text { margin-left: 4px; }
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #d1d5d6;
+  border-radius: 999px;
+  transition: background-color 0.18s ease;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+.switch-slider::before {
+  content: "";
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  transition: transform 0.18s ease;
+}
+.switch-input:checked + .switch-slider {
+  background-color: #27AE60;
+}
+.switch-input:checked + .switch-slider::before {
+  transform: translateX(18px);
+}
+.switch-text {
+  font-size: 0.95rem;
+  color: #222;
+}
+
+/* make the switch focus-visible for keyboard users */
+.switch-input:focus + .switch-slider {
+  box-shadow: 0 0 0 4px rgba(39,174,96,0.12);
+}
+
+/* Ensure primary buttons stay green even when other button rules apply */
+.account-main button.btn-primary,
+.account-main .btn-primary {
+  background: #27AE60;
+  color: #fff;
+  border-color: #219652;
+}
+
+
+/* Media dropzone used in SellerPublish */
+.media-dropzone { transition: background 0.12s ease, border-color 0.12s ease }
+.media-dropzone.dragover { background: rgba(39,174,96,0.04); border-color: #27AE60 }
+.media-preview img, .media-preview video { border-radius: 8px; display: block; margin: 0 auto }
+
+/* remove media button near preview */
+.media-preview .btn { margin-top: 8px }
+.media-remove-btn { background: transparent; border: 1px solid rgba(0,0,0,0.06); color: #b00000 }
+.media-remove-btn:hover { filter: brightness(0.98); }
+
+/* decorator badge remove button */
+.badge button { background: transparent; border: none; color: #b00000; cursor: pointer; font-size: 12px }
+.badge { display: inline-flex; align-items: center; gap:6px; padding: 4px 8px; border-radius: 999px; background: #eef7f0; color:#0b3d24; font-weight:600 }

@@ -74,6 +74,10 @@ export const CarritoProvider = ({ children }) => {
     return carritoFachada.decorarProducto(productoId, tipo);
   };
 
+  const quitarDecorador = (cartItemId, tipo) => {
+    return carritoFachada.quitarDecorador(cartItemId, tipo);
+  };
+
   const estaVacio = () => {
     return carritoFachada.estaVacio();
   };
@@ -93,6 +97,7 @@ export const CarritoProvider = ({ children }) => {
     undo,
     redo,
     decorarProducto,
+    quitarDecorador,
     estaVacio
   };
 

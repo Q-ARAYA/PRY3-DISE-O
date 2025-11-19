@@ -74,7 +74,7 @@ export const CuentaProvider = ({ children }) => {
   const fullCurrentUser = _getFullCurrentUser();
   const publicCurrentUser = _publicUser(fullCurrentUser);
 
-  const register = ({ nombre, email, password, role = 'buyer' }) => {
+  const register = ({ nombre, email, password, role = 'buyer', sellerInfo = null }) => {
     const emailNorm = _normalizeEmail(email);
     const passNorm = _normalizePassword(password);
 
@@ -86,6 +86,17 @@ export const CuentaProvider = ({ children }) => {
       return { exito: false, mensaje: 'Email ya registrado' };
     }
 
+    // If registering as seller, basic validation of required seller fields
+    if (role === 'seller') {
+      const s = sellerInfo || {};
+      if (!s.companyName || !s.taxId || !s.businessAddress || !s.businessAddress.line1) {
+        return { exito: false, mensaje: 'Faltan datos obligatorios del vendedor' };
+      }
+      if (!s.bankInfo || !s.bankInfo.accountNumber || !s.bankInfo.accountHolder) {
+        return { exito: false, mensaje: 'Falta información bancaria del vendedor' };
+      }
+    }
+
     const newUser = {
       id: `u-${Date.now()}`,
       nombre: (nombre || '').trim() || 'Usuario',
@@ -95,6 +106,7 @@ export const CuentaProvider = ({ children }) => {
       direccion: '',
       direcciones: [],
       pedidos: [],
+      sellerInfo: role === 'seller' ? sellerInfo : undefined,
     };
 
     const newUsers = [...users, newUser];
