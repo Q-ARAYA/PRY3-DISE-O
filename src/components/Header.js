@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Header.css';
+import logo from '../logos/logo2.png';
 import { useCarrito } from '../context/CarritoContext';
 import { useCuenta } from '../context/CuentaContext';
 import { Link, useNavigate } from 'react-router-dom';
@@ -64,7 +65,7 @@ const Header = () => {
         {/* Logo */}
         <div className="header-logo">
           <Link to="/" aria-label="Ir al inicio">
-            <h1>⚡ FlashMarket</h1>
+            <img src={logo} alt="FlashMarket" className="site-logo" />
           </Link>
         </div>
 

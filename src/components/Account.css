@@ -1,14 +1,15 @@
 .account-page {
-  padding: 2rem 1rem;
+  padding: 6rem 1rem;
   display: flex;
   justify-content: center;
-  background: #f6f8f9;
+  /* Background image (user provided) with subtle dark overlay for contrast */
+  background: linear-gradient(rgba(0,0,0,0.32), rgba(0,0,0,0.32)), url('https://plus.unsplash.com/premium_photo-1752105780297-cd7d8617add6?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjl8fHZlcmRlJTIwZWNvbW1lcmNlfGVufDB8fDB8fHww') center/cover no-repeat;
 }
 
 .account-container {
   display: flex;
   width: 100%;
-  max-width: 980px;
+  max-width: 650px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.06);
@@ -45,10 +46,19 @@
   padding: 1.25rem 1.5rem;
 }
 
+/* Ajuste visual: subir ligeramente el título de inicio de sesión */
+.account-main h2 {
+  margin-top: 0;
+  margin-bottom: 0.6rem;
+  transform: translateY(-6px);
+  transition: transform 120ms ease;
+}
+
 .account-form {
   display: grid;
   gap: 0.75rem;
-  max-width: 560px;
+  max-width: 100%;
+  grid-template-columns: 1fr; /* mobile: single column */
 }
 
 .account-form label {
@@ -139,9 +149,32 @@
   .seller-grid { grid-template-columns: 1fr; }
 }
 
+/* On wider viewports use two-column form layout to use horizontal space */
+@media (min-width: 900px) {
+  .account-form {
+    grid-template-columns: 1fr 1fr;
+    max-width: 980px;
+    align-items: start;
+  }
+
+  /* Make certain blocks span full width */
+  .account-form .seller-card,
+  .account-form .switch-row,
+  .account-form .form-actions {
+    grid-column: 1 / -1;
+  }
+
+  /* Inputs directly under .seller-grid already use 2 columns inside their grid */
+  .seller-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+
+  /* Make labels take a single column by default; allow specific inputs to span both columns */
+  .account-form label { grid-column: auto; }
+  .account-form label.full-span { grid-column: 1 / -1; }
+}
+
 /* Register form inputs and seller-card tweaks */
 .register-seller { padding: 0.75rem; }
-.form-input { padding: 0.6rem 0.8rem; border-radius: 8px; border: 1px solid #e6efe9; background: #fff; width: 100%; box-sizing: border-box }
+.form-input { padding: 0.6rem 0.8rem; border-radius: 8px; border: 1px solid #e6efe9; background: #fff; width: 100%; box-sizing: border-box; margin-top: 8px }
 .register-seller .seller-title { font-size: 1rem; color: #083057; margin-bottom: 6px }
 .register-seller .seller-sub { font-size: 0.85rem; color: #445f58; margin-bottom: 10px }
 .register-seller label { display:block; margin-bottom: 8px }

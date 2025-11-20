@@ -51,6 +51,19 @@
   transition: all 0.3s ease;
 }
 
+/* Logo image styling */
+.header-logo .site-logo {
+  display: block;
+  height: 100px;
+  width: auto;
+}
+
+@media (max-width: 768px) {
+  .header-logo .site-logo {
+    height: 40px;
+  }
+}
+
 .header.scrolled .header-logo h1 {
   color: rgba(39, 174, 96, 0.3);
   text-shadow: 0 0 1px rgba(39, 174, 96, 0.8);

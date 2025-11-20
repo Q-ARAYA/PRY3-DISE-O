@@ -1,5 +1,6 @@
 import React from 'react';
 import './Footer.css';
+import logo from '../logos/logo.png';
 
 const Footer = () => {
   return (
@@ -9,7 +10,9 @@ const Footer = () => {
         <div className="footer-main">
           {/* Sobre nosotros */}
           <div className="footer-section">
-            <h3>⚡ FlashMarket</h3>
+            <h3>
+              <img src={logo} alt="FlashMarket" className="footer-logo" />
+            </h3>
             <p>
               Tu tienda de confianza para compras rápidas y seguras. 
               Los mejores productos al mejor precio.

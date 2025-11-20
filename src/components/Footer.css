@@ -15,7 +15,7 @@
   background-color: #2d3436;
   color: #dfe6e9;
   padding: 3rem 2rem 1rem;
-  margin-top: 4rem;
+  margin-top: 0rem;
 }
 
 .footer-container {
@@ -77,6 +77,13 @@
   border-radius: 2px;
 }
 
+.footer-logo {
+  height: 150px;
+  width: auto;
+  vertical-align: middle;
+  margin: 0 4px;
+}
+
 /* Redes sociales */
 .footer-social {
   display: flex;
@@ -111,11 +118,15 @@
   display: flex;
   gap: 0.5rem;
   margin-top: 1rem;
+  align-items: center; /* mantener input y botón alineados */
 }
 
 .newsletter-form input {
-  flex: 1;
-  padding: 0.75rem;
+  flex: 1 1 auto; /* permitir que el input crezca/encoga dentro del flex */
+  min-width: 0; /* permitir que el input se reduzca y no fuerce overflow */
+  padding: 0.5rem 0.75rem;
+  height: 44px; /* altura consistente */
+  box-sizing: border-box;
   border: 1px solid #636e72;
   border-radius: 6px;
   background-color: #636e72;
@@ -134,7 +145,11 @@
 }
 
 .newsletter-form button {
-  padding: 0.75rem 1.5rem;
+  padding: 0 1rem; /* horizontal padding; height controlled separately */
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background-color: #27AE60;
   color: white;
   border: none;
@@ -142,8 +157,8 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  min-width: 44px;
-  min-height: 44px;
+  white-space: nowrap;
+  flex: 0 0 auto; /* evitar que el botón se expanda y fuerce overflow */
 }
 
 .newsletter-form button:hover {
@@ -220,6 +235,29 @@
   border-radius: 2px;
 }
 
+/* Logo tweaks for visibility on dark footer */
+.footer-logo,
+.footer-logo-inline {
+  display: inline-block;
+  background: rgba(255,255,255,0.94); /* light background so logo contrasts */
+  padding: 6px 8px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.footer-logo {
+  height: 120px;
+  width: auto;
+  vertical-align: middle;
+}
+
+.footer-logo-inline {
+  height: 18px;
+  width: auto;
+  vertical-align: text-bottom;
+  padding: 2px 6px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .footer {
@@ -233,10 +271,22 @@
 
   .newsletter-form {
     flex-direction: column;
+    align-items: stretch;
   }
 
+  .newsletter-form input,
   .newsletter-form button {
     width: 100%;
+    height: 44px;
+  }
+
+  /* En mobile mostramos el formulario apilado y ocupando todo el ancho del contenedor */
+  .newsletter-form {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    max-width: 100%;
   }
 
   .footer-bottom {

@@ -10,7 +10,7 @@ const Hero = () => {
       title: 'Ofertas Flash',
       subtitle: 'Hasta 50% de descuento en tecnología',
       cta: 'Ver Ofertas',
-      bgColor: '#e8f8f5',
+      image: 'https://plus.unsplash.com/premium_photo-1681702277226-9c8c96573760?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       link: '/ofertas/tecnologia'
     },
     {
@@ -18,7 +18,7 @@ const Hero = () => {
       title: 'Nueva Colección',
       subtitle: 'Las últimas tendencias en moda',
       cta: 'Explorar',
-      bgColor: '#f0f3f4',
+      image: 'https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?q=80&w=928&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       link: '/categorias/ropa'
     },
     {
@@ -26,10 +26,10 @@ const Hero = () => {
       title: 'Envío Gratis',
       subtitle: 'En compras mayores a $50',
       cta: 'Comprar Ahora',
-      bgColor: '#eafaf1',
+      image: 'https://images.unsplash.com/photo-1521334884684-d80222895322?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=abcdefabcdefabcdefabcdefabcdef',
       link: '/categorias'
     }
-  ];
+  ]; 
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -58,7 +58,7 @@ const Hero = () => {
           <div
             key={slide.id}
             className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
-            style={{ backgroundColor: slide.bgColor }}
+            style={{ backgroundImage: slide.image ? `url(${slide.image})` : undefined, backgroundColor: slide.bgColor || undefined }}
             aria-hidden={index !== currentSlide}
           >
             <div className="hero-content">

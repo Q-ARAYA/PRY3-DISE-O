@@ -36,6 +36,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Evitar scroll horizontal en toda la aplicación */
+html, body {
+  overflow-x: hidden;
+}
+
 /* Tipografía mejorada */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;

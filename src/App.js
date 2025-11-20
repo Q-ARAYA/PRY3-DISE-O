@@ -7,6 +7,7 @@ import Categories from './components/Categories';
 import ProductSection from './components/ProductSection';
 import CategoryPage from './components/CategoryPage';
 import Footer from './components/Footer';
+import ScrollToTopButton from './components/ScrollToTopButton';
 import SellerPublish from './components/SellerPublish';
 import Carrito from './components/Carrito';
 import ProductDetails from './components/ProductDetails';
@@ -109,6 +110,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
+      <ScrollToTopButton />
     </div>
   );
 }
