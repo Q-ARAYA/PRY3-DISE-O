@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Categories from './components/Categories';
@@ -23,6 +23,24 @@ import { ProductosAPI } from './services/ProductosAPI';
 function App() {
   const [productosAPI, setProductosAPI] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('darkMode');
+    return saved ? JSON.parse(saved) : false;
+  });
+  const [screenReaderEnabled, setScreenReaderEnabled] = useState(() => {
+    const saved = localStorage.getItem('screenReaderEnabled');
+    return saved ? JSON.parse(saved) : false;
+  });
+  const location = useLocation();
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      document.documentElement.classList.remove('dark-mode');
+    }
+    localStorage.setItem('darkMode', JSON.stringify(darkMode));
+  }, [darkMode]);
 
   useEffect(() => {
     const cargarProductos = async () => {
@@ -59,17 +77,19 @@ function App() {
   const mensClothing = productosAPI.filter(p => p.categoria === "men's clothing").slice(0, 4);
   const womensClothing = productosAPI.filter(p => p.categoria === "women's clothing").slice(0, 4);
 
+  const hideHeaderFooter = ['/login', '/register'].includes(location.pathname);
+
   return (
     <div className="App">
-      <Header />
+      {!hideHeaderFooter && <Header darkMode={darkMode} setDarkMode={setDarkMode} screenReaderEnabled={screenReaderEnabled} setScreenReaderEnabled={setScreenReaderEnabled} />}
       <main>
         <Routes>
           <Route
             path="/"
             element={(
               <>
-                <Hero />
-                <Categories />
+                <Hero screenReaderEnabled={screenReaderEnabled} />
+                <Categories screenReaderEnabled={screenReaderEnabled} />
                 {cargando ? (
                   <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
                     <p style={{ fontSize: '1.2rem', color: '#666' }}>
@@ -79,16 +99,16 @@ function App() {
                 ) : (
                   <>
                     {electronics.length > 0 && (
-                      <ProductSection title="Electrónicos" products={electronics} categorySlug="electronics" />
+                      <ProductSection title="Electrónicos" products={electronics} categorySlug="electronics" screenReaderEnabled={screenReaderEnabled} />
                     )}
                     {jewelery.length > 0 && (
-                      <ProductSection title="Joyería" products={jewelery} categorySlug="jewelery" />
+                      <ProductSection title="Joyería" products={jewelery} categorySlug="jewelery" screenReaderEnabled={screenReaderEnabled} />
                     )}
                     {mensClothing.length > 0 && (
-                      <ProductSection title="Ropa de Hombre" products={mensClothing} categorySlug={"mens-clothing"} />
+                      <ProductSection title="Ropa de Hombre" products={mensClothing} categorySlug={"mens-clothing"} screenReaderEnabled={screenReaderEnabled} />
                     )}
                     {womensClothing.length > 0 && (
-                      <ProductSection title="Ropa de Mujer" products={womensClothing} categorySlug={"womens-clothing"} />
+                      <ProductSection title="Ropa de Mujer" products={womensClothing} categorySlug={"womens-clothing"} screenReaderEnabled={screenReaderEnabled} />
                     )}
                   </>
                 )}
@@ -109,7 +129,7 @@ function App() {
           <Route path="/debug-cuenta" element={<DebugCuenta />} />
         </Routes>
       </main>
-      <Footer />
+      {!hideHeaderFooter && <Footer />}
       <ScrollToTopButton />
     </div>
   );

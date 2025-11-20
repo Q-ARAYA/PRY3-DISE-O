@@ -29,8 +29,23 @@ const slugifyApiCategory = (apiCategory) => {
   return apiCategory.replace(/'/g, '').toLowerCase().replace(/\s+/g, '-');
 };
 
-const Categories = () => {
+const Categories = ({ screenReaderEnabled }) => {
   const [categories, setCategories] = useState([]);
+
+  const speakText = (text) => {
+    if (!screenReaderEnabled || !('speechSynthesis' in window)) return;
+    
+    window.speechSynthesis.cancel();
+    
+    setTimeout(() => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'es-ES';
+      utterance.rate = 1.1;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+      window.speechSynthesis.speak(utterance);
+    }, 50);
+  };
 
   useEffect(() => {
     const cargar = async () => {
@@ -65,6 +80,8 @@ const Categories = () => {
                 className={`category-card ${img ? 'has-image' : ''}`}
                 style={img ? { backgroundImage: `url(${img})` } : undefined}
                 aria-label={`${name}`}
+                onMouseEnter={() => speakText(`Categoría: ${name}`)}
+                onFocus={() => speakText(`Categoría: ${name}`)}
               >
                 {!img && (
                   <div className="category-icon" aria-hidden="true">

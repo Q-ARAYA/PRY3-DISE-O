@@ -1,7 +1,7 @@
 /* ProductDetails styles */
 .product-details {
   padding: 2rem;
-  background-color: #f7f8f9;
+  background-color: var(--bg-secondary);
   min-height: 60vh;
 }
 
@@ -12,17 +12,17 @@
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
   align-items: start;
-  background: #fff;
+  background: var(--bg-primary);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 20px var(--shadow-sm);
 }
 
 .product-image-large {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg,#f8fafb,#ffffff);
+  background: #ffffff;
   border-radius: 8px;
   padding: 2rem;
 }
@@ -37,18 +37,18 @@
 .product-details-info h2 {
   margin: 0 0 0.5rem 0;
   font-size: 1.75rem;
-  color: #1f2d2d;
+  color: var(--text-primary);
 }
 
 .product-price {
-  color: #27AE60;
+  color: var(--accent-primary);
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0.25rem 0 1rem 0;
 }
 
 .product-details-info p {
-  color: #57606a;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -64,30 +64,34 @@
 
 .btn-secondary {
   background: transparent;
-  border: 2px solid #e8ecec;
+  border: 2px solid var(--border-color);
   padding: 0.75rem 1rem;
   border-radius: 8px;
   cursor: pointer;
   margin-left: 0.5rem;
+  color: var(--text-primary);
 }
 
 .options-panel {
   margin-top: 1.25rem;
   padding: 1rem;
   border-radius: 8px;
-  background: #f8f9fa;
-  border: 1px dashed #e6e9ea;
+  background: var(--bg-secondary);
+  border: 1px dashed var(--border-color);
 }
 
 .options-panel h4 {
   margin: 0 0 0.5rem 0;
   font-size: 1rem;
+  color: var(--text-primary);
 }
 
 .options-panel select {
   padding: 0.5rem 0.6rem;
   border-radius: 6px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .badge {

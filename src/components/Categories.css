@@ -1,6 +1,6 @@
 .categories {
-  padding: 3rem 2rem;
-  background-color: #ffffff;
+  padding: 1.5rem 2rem;
+  background-color: var(--bg-primary);
 }
 
 .categories-container {
@@ -11,8 +11,8 @@
 .section-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #2d3436;
-  margin: 0 0 2rem 0;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem 0;
   text-align: center;
 }
 
@@ -23,12 +23,12 @@
 }
 
 .category-card {
-  background-color: #f8f9fa;
+  background-color: var(--bg-secondary);
   border-radius: 12px;
   padding: 2rem 1.5rem;
   text-align: center;
   text-decoration: none;
-  color: #2d3436;
+  color: var(--text-primary);
   transition: all 0.3s ease;
   border: 2px solid transparent;
   min-height: 180px;
@@ -41,9 +41,9 @@
 
 .category-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  border-color: #27AE60;
-  background-color: #ffffff;
+  box-shadow: 0 8px 24px var(--shadow-md);
+  border-color: var(--accent-primary);
+  background-color: var(--bg-primary);
 }
 
 .category-card:focus {
@@ -90,7 +90,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0;
-  color: #2d3436;
+  color: var(--text-primary);
 }
 
 .category-card.has-image h3,
@@ -100,7 +100,7 @@
 
 .category-card p {
   font-size: 0.9rem;
-  color: #636e72;
+  color: var(--text-secondary);
   margin: 0;
   line-height: 1.4;
 }
@@ -108,7 +108,7 @@
 /* Responsive */
 @media (max-width: 768px) {
   .categories {
-    padding: 2rem 1rem;
+    padding: 1.5rem 1rem;
   }
 
   .section-title {

@@ -3,12 +3,27 @@ import './ProductCard.css';
 import { useCarrito } from '../context/CarritoContext';
 import { Link } from 'react-router-dom';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, screenReaderEnabled }) => {
   const { id, name, price, originalPrice, rating, image, discount } = product;
   const { agregarProducto, productos: productosEnCarrito = [] } = useCarrito();
 
   const productName = name || product.nombre;
   const productImage = image || product.imagen;
+
+  const speakText = (text) => {
+    if (!screenReaderEnabled || !('speechSynthesis' in window)) return;
+    
+    window.speechSynthesis.cancel();
+    
+    setTimeout(() => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'es-ES';
+      utterance.rate = 1.1;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+      window.speechSynthesis.speak(utterance);
+    }, 50);
+  };
 
   const handleAgregarCarrito = (e) => {
     e.preventDefault();
@@ -16,6 +31,8 @@ const ProductCard = ({ product }) => {
     const resultado = agregarProducto(product, 1);
     if (!resultado?.exito) {
       alert(resultado?.mensaje || 'No se pudo agregar el producto');
+    } else {
+      speakText(`${productName} agregado al carrito`);
     }
   };
 
@@ -35,7 +52,12 @@ const ProductCard = ({ product }) => {
       {discount && <span className="product-badge">-{discount}%</span>}
       {decorated && <span className="decorator-badge">✨ Opciones</span>}
 
-      <Link to={`/producto/${id}`} className="product-image-link">
+      <Link 
+        to={`/producto/${id}`} 
+        className="product-image-link"
+        onMouseEnter={() => speakText(`Producto: ${productName}, Precio: ${price} dólares`)}
+        onFocus={() => speakText(`Producto: ${productName}, Precio: ${price} dólares`)}
+      >
         <img
           src={productImage}
           alt={productName}
@@ -46,7 +68,14 @@ const ProductCard = ({ product }) => {
       </Link>
 
       <div className="product-info">
-        <Link to={`/producto/${id}`} className="product-name"><h3>{productName}</h3></Link>
+        <Link 
+          to={`/producto/${id}`} 
+          className="product-name"
+          onMouseEnter={() => speakText(productName)}
+          onFocus={() => speakText(productName)}
+        >
+          <h3>{productName}</h3>
+        </Link>
         <div className="product-rating" aria-label={`Calificación: ${rating} de 5 estrellas`}>
           {renderStars(rating)} <span className="rating-count">({rating})</span>
         </div>
@@ -56,7 +85,13 @@ const ProductCard = ({ product }) => {
           <span className="current-price">${price}</span>
         </div>
 
-        <button className="add-to-cart-btn" onClick={handleAgregarCarrito} aria-label={`Agregar ${productName} al carrito`}>
+        <button 
+          className="add-to-cart-btn" 
+          onClick={handleAgregarCarrito} 
+          aria-label={`Agregar ${productName} al carrito`}
+          onMouseEnter={() => speakText(`Agregar ${productName} al carrito`)}
+          onFocus={() => speakText(`Agregar ${productName} al carrito`)}
+        >
           Agregar al Carrito
         </button>
       </div>

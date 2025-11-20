@@ -1,5 +1,39 @@
 /* FlashMarket - Estilos globales */
 
+/* Variables CSS para temas */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #f0f0f0;
+  --text-primary: #2d3436;
+  --text-secondary: #636e72;
+  --text-tertiary: #95a5a6;
+  --border-color: #e0e0e0;
+  --shadow-sm: rgba(0, 0, 0, 0.06);
+  --shadow-md: rgba(0, 0, 0, 0.1);
+  --shadow-lg: rgba(0, 0, 0, 0.15);
+  --accent-primary: #27AE60;
+  --accent-hover: #229954;
+  --accent-light: rgba(39, 174, 96, 0.1);
+}
+
+/* Modo Oscuro */
+.dark-mode {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #3a3a3a;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #808080;
+  --border-color: #404040;
+  --shadow-sm: rgba(0, 0, 0, 0.3);
+  --shadow-md: rgba(0, 0, 0, 0.5);
+  --shadow-lg: rgba(0, 0, 0, 0.7);
+  --accent-primary: #2ecc71;
+  --accent-hover: #27ae60;
+  --accent-light: rgba(46, 204, 113, 0.15);
+}
+
 /* Reset y configuración base */
 * {
   box-sizing: border-box;
@@ -13,21 +47,22 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #ffffff;
-  color: #2d3436;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-size: 16px;
   line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Mejora de contraste para accesibilidad */
 ::selection {
-  background-color: #27AE60;
+  background-color: var(--accent-primary);
   color: #ffffff;
 }
 
 /* Estilos para elementos de enfoque (accesibilidad) */
 :focus-visible {
-  outline: 3px solid #27AE60;
+  outline: 3px solid var(--accent-primary);
   outline-offset: 2px;
 }
 
@@ -45,21 +80,22 @@ html, body {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   line-height: 1.2;
-  color: #2d3436;
+  color: var(--text-primary);
 }
 
 p {
   line-height: 1.6;
+  color: var(--text-primary);
 }
 
 /* Enlaces accesibles */
 a {
-  color: #27AE60;
+  color: var(--accent-primary);
   text-decoration: underline;
 }
 
 a:hover {
-  color: #229954;
+  color: var(--accent-hover);
 }
 
 /* Botones accesibles */
@@ -79,7 +115,20 @@ img {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-  background-color: #f8f9fa;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
   padding: 0.125rem 0.25rem;
   border-radius: 3px;
+}
+
+/* Modo lector de pantalla */
+.screen-reader-mode * {
+  cursor: help !important;
+}
+
+.screen-reader-mode button:hover,
+.screen-reader-mode a:hover,
+.screen-reader-mode [role="button"]:hover {
+  outline: 3px solid var(--accent-primary) !important;
+  outline-offset: 2px !important;
 }

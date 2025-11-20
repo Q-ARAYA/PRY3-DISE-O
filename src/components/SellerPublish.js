@@ -16,6 +16,7 @@ const SellerPublish = () => {
   const [msg, setMsg] = useState(null);
 
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
   // Redirect if not authenticated or not seller (do not show the intermediate message)
   useEffect(() => {
@@ -46,8 +47,6 @@ const SellerPublish = () => {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
-
-  const fileInputRef = useRef(null);
 
   const handleRemoveMedia = () => {
     setMediaFile(null);

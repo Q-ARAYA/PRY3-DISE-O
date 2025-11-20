@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Hero.css';
 
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const timerRef = useRef(null);
+  const progressIntervalRef = useRef(null);
 
   const slides = [
     {
@@ -29,35 +32,74 @@ const Hero = () => {
       image: 'https://images.unsplash.com/photo-1521334884684-d80222895322?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=abcdefabcdefabcdefabcdefabcdef',
       link: '/categorias'
     }
-  ]; 
+  ];
+
+  const SLIDE_DURATION = 5000; // 5 segundos
+  const PROGRESS_INTERVAL = 50; // Actualizar cada 50ms
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    // Reiniciar progreso
+    setProgress(0);
+    
+    // Timer para cambiar de slide
+    timerRef.current = setTimeout(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, SLIDE_DURATION);
 
-    return () => clearInterval(timer);
-  }, [slides.length]);
+    // Interval para actualizar barra de progreso
+    let elapsed = 0;
+    progressIntervalRef.current = setInterval(() => {
+      elapsed += PROGRESS_INTERVAL;
+      setProgress((elapsed / SLIDE_DURATION) * 100);
+    }, PROGRESS_INTERVAL);
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+    };
+  }, [currentSlide, slides.length]);
 
   const goToSlide = (index) => {
     setCurrentSlide(index);
+    setProgress(0);
   };
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
+    setProgress(0);
   };
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    setProgress(0);
+  };
+
+  const handleClickArea = (e) => {
+    const slider = e.currentTarget;
+    const rect = slider.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const width = rect.width;
+    
+    // Si hace clic en el tercio izquierdo, ir atrás
+    if (x < width * 0.3) {
+      prevSlide();
+    } 
+    // Si hace clic en el tercio derecho, ir adelante
+    else if (x > width * 0.7) {
+      nextSlide();
+    }
   };
 
   return (
     <section className="hero" aria-label="Ofertas destacadas">
-      <div className="hero-slider">
+      <div 
+        className="hero-slider"
+        onClick={handleClickArea}
+      >
         {slides.map((slide, index) => (
           <div
             key={slide.id}
-            className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
+            className={`hero-slide ${index === currentSlide ? 'active' : ''} ${index === (currentSlide - 1 + slides.length) % slides.length ? 'prev' : ''} ${index === (currentSlide + 1) % slides.length ? 'next' : ''}`}
             style={{ backgroundImage: slide.image ? `url(${slide.image})` : undefined, backgroundColor: slide.bgColor || undefined }}
             aria-hidden={index !== currentSlide}
           >
@@ -68,6 +110,7 @@ const Hero = () => {
                 href={slide.link} 
                 className="hero-cta"
                 tabIndex={index === currentSlide ? 0 : -1}
+                onClick={(e) => e.stopPropagation()}
               >
                 {slide.cta}
               </a>
@@ -75,37 +118,34 @@ const Hero = () => {
           </div>
         ))}
 
-        {/* Controles */}
-        <button
-          className="hero-control hero-prev"
-          onClick={prevSlide}
-          aria-label="Diapositiva anterior"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M15 18l-6-6 6-6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
+        {/* Áreas de navegación invisibles */}
+        <div className="hero-nav-area hero-nav-left" aria-label="Anterior">
+          <div className="hero-nav-hint">‹</div>
+        </div>
+        <div className="hero-nav-area hero-nav-right" aria-label="Siguiente">
+          <div className="hero-nav-hint">›</div>
+        </div>
 
-        <button
-          className="hero-control hero-next"
-          onClick={nextSlide}
-          aria-label="Siguiente diapositiva"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M9 18l6-6-6-6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-
-        {/* Indicadores */}
+        {/* Indicadores con barra de progreso */}
         <div className="hero-indicators" role="group" aria-label="Indicadores de diapositivas">
           {slides.map((_, index) => (
             <button
               key={index}
               className={`hero-indicator ${index === currentSlide ? 'active' : ''}`}
-              onClick={() => goToSlide(index)}
+              onClick={(e) => {
+                e.stopPropagation();
+                goToSlide(index);
+              }}
               aria-label={`Ir a diapositiva ${index + 1}`}
               aria-current={index === currentSlide}
-            />
+            >
+              {index === currentSlide && (
+                <div 
+                  className="hero-indicator-progress" 
+                  style={{ width: `${progress}%` }}
+                />
+              )}
+            </button>
           ))}
         </div>
       </div>
