@@ -450,33 +450,33 @@ const Account = () => {
                   <form className="register-two-column register-seller" onSubmit={(e) => e.preventDefault()}>
                     <div className="register-column-left">
                       <div className="column-title">Información empresa</div>
-                      <label>Nombre de la empresa / persona
-                        <input className="form-input" placeholder="Nombre de la empresa / persona" value={sellerInfo.companyName} onChange={(e) => setSellerInfo(prev => ({ ...prev, companyName: e.target.value }))} />
+                      <label>Nombre de la empresa / persona *
+                        <input className="form-input" placeholder="Nombre de la empresa / persona" value={sellerInfo.companyName} onChange={(e) => setSellerInfo(prev => ({ ...prev, companyName: e.target.value }))} required />
                       </label>
 
-                      <label>Tipo de vendedor
-                        <select className="form-input" value={sellerInfo.sellerType} onChange={(e) => setSellerInfo(prev => ({ ...prev, sellerType: e.target.value }))}>
+                      <label>Tipo de vendedor *
+                        <select className="form-input" value={sellerInfo.sellerType} onChange={(e) => setSellerInfo(prev => ({ ...prev, sellerType: e.target.value }))} required>
                           <option value="individual">Individual / Persona física</option>
                           <option value="company">Empresa registrada</option>
                         </select>
                       </label>
 
-                      <label>Número de identificación fiscal
-                        <input className="form-input" placeholder="Identificación fiscal (NIT / cédula)" value={sellerInfo.taxId} onChange={(e) => setSellerInfo(prev => ({ ...prev, taxId: e.target.value }))} />
+                      <label>Número de identificación fiscal *
+                        <input className="form-input" placeholder="Identificación fiscal (NIT / cédula)" value={sellerInfo.taxId} onChange={(e) => setSellerInfo(prev => ({ ...prev, taxId: e.target.value }))} required />
                       </label>
 
-                      <label>Teléfono de contacto
-                        <input className="form-input" placeholder="Teléfono" value={sellerInfo.contactPhone || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, contactPhone: e.target.value }))} />
+                      <label>Teléfono de contacto *
+                        <input className="form-input" placeholder="Teléfono" value={sellerInfo.contactPhone || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, contactPhone: e.target.value }))} required />
                       </label>
                     </div>
 
                     <div className="register-column-right">
                       <div className="column-title">Dirección física del negocio</div>
-                      <label>Dirección completa
-                        <input className="form-input" placeholder="Dirección completa" value={sellerInfo.businessAddress?.line1 || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, businessAddress: { ...(prev.businessAddress || {}), line1: e.target.value } }))} />
+                      <label>Dirección completa *
+                        <input className="form-input" placeholder="Dirección completa" value={sellerInfo.businessAddress?.line1 || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, businessAddress: { ...(prev.businessAddress || {}), line1: e.target.value } }))} required />
                       </label>
-                      <label>Provincia / Cantón / Distrito
-                        <input className="form-input" placeholder="Provincia, Cantón, Distrito" value={sellerInfo.businessAddress?.province || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, businessAddress: { ...(prev.businessAddress || {}), province: e.target.value } }))} />
+                      <label>Provincia / Cantón / Distrito *
+                        <input className="form-input" placeholder="Provincia, Cantón, Distrito" value={sellerInfo.businessAddress?.province || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, businessAddress: { ...(prev.businessAddress || {}), province: e.target.value } }))} required />
                       </label>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                         <label style={{ marginBottom: 0 }}>Código postal
@@ -493,37 +493,57 @@ const Account = () => {
 
                     <div style={{ gridColumn: '1 / -1' }}>
                       <div className="column-title">Envíos y logística</div>
-                      <label>Dirección de despacho
-                        <input className="form-input" placeholder="Dirección de despacho" value={sellerInfo.dispatchAddress?.line1 || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, dispatchAddress: { ...(prev.dispatchAddress || {}), line1: e.target.value } }))} />
-                      </label>
-                      <label>Horarios de despacho
-                        <input className="form-input" placeholder="Horarios de despacho" value={sellerInfo.dispatchAddress?.schedule || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, dispatchAddress: { ...(prev.dispatchAddress || {}), schedule: e.target.value } }))} />
-                      </label>
-                      <label>Métodos de envío
-                        <input className="form-input" placeholder="Métodos de envío" value={sellerInfo.dispatchAddress?.methods || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, dispatchAddress: { ...(prev.dispatchAddress || {}), methods: e.target.value } }))} />
-                      </label>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                        <label style={{ marginBottom: 0 }}>Dirección de despacho
+                          <input className="form-input" placeholder="Dirección de despacho" value={sellerInfo.dispatchAddress?.line1 || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, dispatchAddress: { ...(prev.dispatchAddress || {}), line1: e.target.value } }))} />
+                        </label>
+                        <label style={{ marginBottom: 0, gridRow: 'span 2' }}>Métodos de envío
+                          <input className="form-input" placeholder="Métodos de envío" value={sellerInfo.dispatchAddress?.methods || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, dispatchAddress: { ...(prev.dispatchAddress || {}), methods: e.target.value } }))} />
+                        </label>
+                        <label style={{ marginBottom: 0 }}>Horarios de despacho
+                          <input className="form-input" placeholder="Horarios de despacho" value={sellerInfo.dispatchAddress?.schedule || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, dispatchAddress: { ...(prev.dispatchAddress || {}), schedule: e.target.value } }))} />
+                        </label>
+                      </div>
                     </div>
 
                     <div style={{ gridColumn: '1 / -1' }}>
                       <div className="column-title">Información bancaria</div>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                        <label style={{ marginBottom: 0 }}>Nombre del banco
-                          <input className="form-input" placeholder="Nombre del banco" value={sellerInfo.bankInfo?.bankName || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, bankInfo: { ...(prev.bankInfo || {}), bankName: e.target.value } }))} />
+                        <label style={{ marginBottom: 0 }}>Nombre del banco *
+                          <input className="form-input" placeholder="Nombre del banco" value={sellerInfo.bankInfo?.bankName || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, bankInfo: { ...(prev.bankInfo || {}), bankName: e.target.value } }))} required />
                         </label>
                         <label style={{ marginBottom: 0 }}>Tipo de cuenta
                           <input className="form-input" placeholder="Tipo de cuenta" value={sellerInfo.bankInfo?.accountType || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, bankInfo: { ...(prev.bankInfo || {}), accountType: e.target.value } }))} />
                         </label>
-                        <label style={{ marginBottom: 0 }}>Número de cuenta / IBAN
-                          <input className="form-input" placeholder="Número de cuenta / IBAN" value={sellerInfo.bankInfo?.accountNumber || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, bankInfo: { ...(prev.bankInfo || {}), accountNumber: e.target.value } }))} />
+                        <label style={{ marginBottom: 0 }}>Número de cuenta / IBAN *
+                          <input className="form-input" placeholder="Número de cuenta / IBAN" value={sellerInfo.bankInfo?.accountNumber || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, bankInfo: { ...(prev.bankInfo || {}), accountNumber: e.target.value } }))} required />
                         </label>
-                        <label style={{ marginBottom: 0 }}>Nombre del titular
-                          <input className="form-input" placeholder="Nombre del titular" value={sellerInfo.bankInfo?.accountHolder || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, bankInfo: { ...(prev.bankInfo || {}), accountHolder: e.target.value } }))} />
+                        <label style={{ marginBottom: 0 }}>Nombre del titular *
+                          <input className="form-input" placeholder="Nombre del titular" value={sellerInfo.bankInfo?.accountHolder || ''} onChange={(e) => setSellerInfo(prev => ({ ...prev, bankInfo: { ...(prev.bankInfo || {}), accountHolder: e.target.value } }))} required />
                         </label>
                       </div>
                     </div>
 
                     <div style={{ gridColumn: '1 / -1' }} className="seller-actions">
                       <button className="btn btn-primary" onClick={() => {
+                        // Validaciones igual que en el registro
+                        const errs = {};
+                        if (!sellerInfo.companyName) errs.companyName = 'Nombre de empresa requerido';
+                        if (!sellerInfo.taxId) errs.taxId = 'Identificación fiscal requerida';
+                        if (!sellerInfo.contactPhone) errs.contactPhone = 'Teléfono de contacto requerido';
+                        if (!sellerInfo.businessAddress?.line1) errs.businessAddress = 'Dirección del negocio requerida';
+                        if (!sellerInfo.businessAddress?.province) errs.businessProvince = 'Provincia/Cantón/Distrito requerido';
+                        if (!sellerInfo.bankInfo?.bankName || !sellerInfo.bankInfo?.accountNumber || !sellerInfo.bankInfo?.accountHolder) {
+                          errs.bankInfo = 'Información bancaria incompleta (banco, número de cuenta y titular son obligatorios)';
+                        }
+                        
+                        if (Object.keys(errs).length > 0) {
+                          let errorMsg = 'Por favor completa los campos obligatorios:\n';
+                          Object.values(errs).forEach(err => errorMsg += `• ${err}\n`);
+                          setSellerMsg({ type: 'error', text: errorMsg });
+                          return;
+                        }
+
                         const res = actualizarPerfil({ sellerInfo });
                         if (res?.exito) {
                           setSellerMsg({ type: 'success', text: 'Información guardada' });
