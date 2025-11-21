@@ -28,7 +28,7 @@
 .header-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: 0rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -245,6 +245,7 @@
   min-height: 66px;
   border: 2px solid var(--border-color);
   background-color: var(--bg-primary);
+  position: relative;
 }
 
 .header-icon svg {
@@ -286,18 +287,21 @@
 
 .cart-icon-wrapper {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cart-badge {
   position: absolute;
-  top: -8px;
-  right: -8px;
+  top: 8px;
+  right: 8px;
   background-color: #27AE60;
   color: white;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  padding: 0.125rem 0.375rem;
-  border-radius: 10px;
+  padding: 0.125rem 0.35rem;
+  border-radius: 8px;
   min-width: 20px;
   text-align: center;
   transition: all 0.2s ease;
@@ -331,6 +335,15 @@
 
   .header-search.collapsed {
     flex: 0 0 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cart-badge {
+    top: 4px;
+    right: 4px;
+    font-size: 0.65rem;
+    padding: 0.1rem 0.25rem;
   }
 }
 

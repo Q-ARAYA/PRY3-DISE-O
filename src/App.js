@@ -9,6 +9,7 @@ import CategoryPage from './components/CategoryPage';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import SellerPublish from './components/SellerPublish';
+import Notifications from './components/Notifications';
 import Carrito from './components/Carrito';
 import ProductDetails from './components/ProductDetails';
 import Checkout from './components/Checkout';
@@ -77,11 +78,9 @@ function App() {
   const mensClothing = productosAPI.filter(p => p.categoria === "men's clothing").slice(0, 4);
   const womensClothing = productosAPI.filter(p => p.categoria === "women's clothing").slice(0, 4);
 
-  const hideHeaderFooter = ['/login', '/register'].includes(location.pathname);
-
   return (
     <div className="App">
-      {!hideHeaderFooter && <Header darkMode={darkMode} setDarkMode={setDarkMode} screenReaderEnabled={screenReaderEnabled} setScreenReaderEnabled={setScreenReaderEnabled} />}
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} screenReaderEnabled={screenReaderEnabled} setScreenReaderEnabled={setScreenReaderEnabled} />
       <main>
         <Routes>
           <Route
@@ -129,7 +128,8 @@ function App() {
           <Route path="/debug-cuenta" element={<DebugCuenta />} />
         </Routes>
       </main>
-      {!hideHeaderFooter && <Footer />}
+      <Footer />
+      <Notifications />
       <ScrollToTopButton />
     </div>
   );

@@ -8,6 +8,7 @@ import Bitcoin from '../services/bridge/MetodosPago/Bitcoin';
 import PayPal from '../services/bridge/MetodosPago/PayPal';
 import TransferenciaBancaria from '../services/bridge/MetodosPago/TransferenciaBancaria';
 import './Checkout.css';
+import Notifier from '../services/Notifier';
 
 const Checkout = () => {
   const {
@@ -190,7 +191,7 @@ const Checkout = () => {
       } catch (e) {}
 
       // 9. Redirigir
-      alert(`Pago realizado correctamente\nID: ${resultadoBridge.transaccionId}`);
+      Notifier.success(`Pago realizado correctamente\nID: ${resultadoBridge.transaccionId}`);
       navigate('/historial');
 
     } catch (error) {

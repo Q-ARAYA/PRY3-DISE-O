@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCuenta } from '../context/CuentaContext';
 import { ProductosAPI } from '../services/ProductosAPI';
 import carritoFachada from '../services/fachada/CarritoFachada';
+import './Account.css';
 
 const SellerPublish = () => {
   const { currentUser } = useCuenta();
@@ -118,65 +119,101 @@ const SellerPublish = () => {
   
 
   return (
-    <main style={{ padding: '2rem' }}>
-      <h2>Publicar Producto</h2>
-      {msg && (
-        <div style={{ padding: 8, background: msg.type === 'success' ? '#e6ffed' : '#ffecec', color: msg.type === 'success' ? '#064e2a' : '#b00000' }}>{msg.text}</div>
-      )}
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 640 }}>
-        <input name="nombre" placeholder="Nombre del producto" value={form.nombre} onChange={handleChange} required />
-        <input name="precio" placeholder="Precio" value={form.precio} onChange={handleChange} required />
-        <input name="stock" type="number" min={0} placeholder="Stock disponible" value={stock} onChange={(e) => setStock(e.target.value)} />
+    <main className="account-page">
+      <div className="account-container">
+        <section className="account-main">
+          <h2>Publicar Producto</h2>
+          {msg && (
+            <div className="account-message" style={{ background: msg.type === 'success' ? '#e6ffed' : '#ffecec', color: msg.type === 'success' ? '#064e2a' : '#b00000' }}>{msg.text}</div>
+          )}
 
-        <label style={{ display: 'flex', flexDirection: 'column' }}>
-          Categoría
-          <select name="categoria" value={form.categoria} onChange={(e) => { handleChange(e); setUseOtherCategory(e.target.value === '__other'); }}>
-            <option value="">-- Selecciona --</option>
-            {categories.map(c => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-            <option value="__other">Otra...</option>
-          </select>
-        </label>
+          <form onSubmit={handleSubmit} className="register-two-column seller-publish-form">
+            <div className="register-column-left">
+              <div className="column-title">Información del producto</div>
+              <label>Nombre del producto
+                <input className="form-input" name="nombre" placeholder="Nombre del producto" value={form.nombre} onChange={handleChange} required />
+              </label>
 
-        {useOtherCategory && (
-          <input name="categoria" placeholder="Ingrese nueva categoría" value={form.categoria} onChange={handleChange} />
-        )}
+              <label>Precio
+                <input className="form-input" name="precio" placeholder="Precio" value={form.precio} onChange={handleChange} required />
+              </label>
 
-        <div>
-          <label style={{ display: 'block', marginBottom: 6 }}>Imagen o video (arrastra aquí o selecciona)</label>
-          <div
-            className={`media-dropzone${isDragOver ? ' dragover' : ''}`}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            style={{ padding: 12, border: '2px dashed #ccc', borderRadius: 8, textAlign: 'center' }}
-          >
-            <input ref={fileInputRef} type="file" accept="image/*,video/*" onChange={onFileInputChange} style={{ display: 'block', margin: '0 auto 8px' }} />
-            <div style={{ fontSize: 13, color: '#666' }}>O pega la URL en el campo de abajo</div>
-            {previewUrl && (
-              <div className="media-preview" style={{ marginTop: 8 }}>
-                {mediaFile && (mediaFile.type.startsWith('video/') ? (
-                  <video src={previewUrl} controls style={{ maxWidth: '100%', maxHeight: 240 }} />
-                ) : (
-                  <img src={previewUrl} alt="preview" style={{ maxWidth: '100%', maxHeight: 240 }} />
-                ))}
-                <div style={{ marginTop: 8, display: 'flex', justifyContent: 'center' }}>
-                  <button type="button" className="btn" onClick={handleRemoveMedia} style={{ marginLeft: 8 }}>Quitar</button>
-                </div>
+              <label>Stock disponible
+                <input className="form-input" name="stock" type="number" min={0} placeholder="Stock disponible" value={stock} onChange={(e) => setStock(e.target.value)} />
+              </label>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem', alignItems: 'start' }}>
+                <label style={{ marginBottom: 0 }}>Categoría
+                  <select className="form-input" name="categoria" value={form.categoria} onChange={(e) => { handleChange(e); setUseOtherCategory(e.target.value === '__other'); }}>
+                    <option value="">-- Selecciona --</option>
+                    {categories.map(c => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                    <option value="__other">Otra...</option>
+                  </select>
+                </label>
               </div>
-            )}
-          </div>
-          <div style={{ marginTop: 8 }}>
-            <input name="imagen" placeholder="URL de imagen (opcional)" value={form.imagen} onChange={handleChange} />
-          </div>
-        </div>
-        <textarea name="descripcion" placeholder="Descripción" value={form.descripcion} onChange={handleChange} rows={6} />
-        <div>
-          <button type="submit">Publicar</button>
-          <button type="button" style={{ marginLeft: 8 }} onClick={() => navigate(-1)}>Cancelar</button>
-        </div>
-      </form>
+
+              {useOtherCategory && (
+                <label style={{ marginTop: 6 }}>Otra categoría
+                  <input className="form-input" name="categoria" placeholder="Ingrese nueva categoría" value={form.categoria} onChange={handleChange} />
+                </label>
+              )}
+
+              <div style={{ marginTop: 10, display: 'flex', gap: 8, justifyContent: 'flex-start' }}>
+                <button type="submit" className="btn btn-primary">Publicar</button>
+                <button type="button" className="btn" onClick={() => navigate(-1)}>Cancelar</button>
+              </div>
+            </div>
+
+            <div className="register-column-right">
+              <label>Descripción
+                <textarea className="form-input" name="descripcion" placeholder="Descripción" value={form.descripcion} onChange={handleChange} rows={6} />
+              </label>
+              
+              <div className="column-title">Imagen o video</div>
+              <div
+                className={`media-dropzone${isDragOver ? ' dragover' : ''}`}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+              >
+                <input ref={fileInputRef} type="file" accept="image/*,video/*" onChange={onFileInputChange} style={{ display: 'none' }} />
+
+                {!previewUrl && (
+                  <div className="upload-placeholder">
+                    <svg width="34" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                      <path d="M12 3v10" stroke="#27AE60" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M8 7l4-4 4 4" stroke="#27AE60" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <rect x="3" y="13" width="18" height="7" rx="2" stroke="#27AE60" strokeWidth="1.2"/>
+                    </svg>
+                    <div style={{ fontSize: 15, color: '#0b3d24', fontWeight: 700 }}>Arrastra un archivo aquí para subirlo, o <span className="browse-link" onClick={() => fileInputRef.current && fileInputRef.current.click()}>haz clic aquí para buscar</span></div>
+                  </div>
+                )}
+
+                {previewUrl && (
+                  <div className="media-preview" style={{ marginTop: 8 }}>
+                    <button type="button" className="remove-overlay" onClick={handleRemoveMedia}>✕</button>
+                    {mediaFile && (mediaFile.type.startsWith('video/') ? (
+                      <video src={previewUrl} controls style={{ maxWidth: '100%', maxHeight: 240 }} />
+                    ) : (
+                      <img src={previewUrl} alt="preview" style={{ maxWidth: '100%', maxHeight: 240 }} />
+                    ))}
+                    <div className="media-info">
+                      <div className="filename">{mediaFile ? mediaFile.name : 'Archivo seleccionado'}</div>
+                      <div className="filesize">{mediaFile ? (mediaFile.size/1024).toFixed(1) + ' KB' : ''}</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <label style={{ marginTop: 10 }}>URL de imagen (opcional)
+                <input className="form-input" name="imagen" placeholder="URL de imagen (opcional)" value={form.imagen} onChange={handleChange} />
+              </label>
+            </div>
+          </form>
+        </section>
+      </div>
     </main>
   );
 };

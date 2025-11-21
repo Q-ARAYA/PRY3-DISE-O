@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Carrito.css';
+import Notifier from '../services/Notifier';
 import { useCarrito } from '../context/CarritoContext';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -15,8 +16,6 @@ const Carrito = () => {
     eliminarProducto,
     actualizarCantidad,
     aplicarDescuento,
-    undo,
-    redo,
     estaVacio,
     quitarDecorador
   } = useCarrito();
@@ -31,22 +30,14 @@ const Carrito = () => {
     }
   };
 
-  const handleUndo = () => {
-    const res = undo();
-    if (!res.exito) alert(res.mensaje);
-  };
-
-  const handleRedo = () => {
-    const res = redo();
-    if (!res.exito) alert(res.mensaje);
-  };
+  
 
   const handleCantidad = (productoId, nuevaCantidad) => {
     if (nuevaCantidad < 1) return;
     
     const resultado = actualizarCantidad(productoId, nuevaCantidad);
     if (!resultado.exito) {
-      alert(resultado.mensaje);
+      Notifier.error(resultado.mensaje);
     }
   };
 
@@ -89,12 +80,12 @@ const Carrito = () => {
   return (
     <main className="carrito-page">
         <div className="carrito-container">
-          <h1>Mi Carrito</h1>
-          <div className="carrito-actions">
-            <button className="btn-undo" onClick={handleUndo}>Deshacer</button>
-            <button className="btn-redo" onClick={handleRedo}>Rehacer</button>
+          <div className="carrito-header">
+            <h1>Mi Carrito</h1>
+            <div className="carrito-count" aria-label={`Carrito con ${cantidadTotal} ${cantidadTotal === 1 ? 'producto' : 'productos'}`}>
+              {cantidadTotal} {cantidadTotal === 1 ? 'producto' : 'productos'}
+            </div>
           </div>
-          <p className="carrito-subtitle">{cantidadTotal} {cantidadTotal === 1 ? 'producto' : 'productos'}</p>
 
           <div className="carrito-content">
             {/* Lista de productos */}
@@ -118,7 +109,7 @@ const Carrito = () => {
                             <span>{d.tipo}</span>
                             <button title="Quitar decorador" onClick={async () => {
                               const res = await quitarDecorador(producto.cartItemId || producto.id, d.tipo);
-                              if (!res?.exito) alert(res?.mensaje || 'No se pudo quitar el decorador');
+                              if (!res?.exito) Notifier.error(res?.mensaje || 'No se pudo quitar el decorador');
                             }} style={{ background: 'transparent', border: 'none', color: '#b00000', cursor: 'pointer' }}>✕</button>
                           </span>
                         ))}

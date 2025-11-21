@@ -4,6 +4,7 @@ import './ProductCard.css';
 import './ProductDetails.css';
 import { ProductosAPI } from '../services/ProductosAPI';
 import { ProductDecorator } from '../services/decorator/ProductDecorator';
+import Notifier from '../services/Notifier';
 import { useCarrito } from '../context/CarritoContext';
 
 const ProductDetails = () => {
@@ -82,32 +83,32 @@ const ProductDetails = () => {
           await decorarProducto(target.cartItemId || target.id, tiposToApply);
         }
       }
-      alert('Producto agregado al carrito');
+      Notifier.success('Producto agregado al carrito');
       navigate('/carrito');
     } else {
-      alert(res.mensaje);
+      Notifier.error(res.mensaje);
     }
   };
 
   const handleDecorar = () => {
     // Construir array de decoradores seleccionados
     const seleccionados = Object.keys(decoratorChecks).filter(k => decoratorChecks[k]);
-    if (seleccionados.length === 0 && !decoratorSelection) return alert('Selecciona al menos una opción de decoración');
+    if (seleccionados.length === 0 && !decoratorSelection) return Notifier.error('Selecciona al menos una opción de decoración');
 
     const tiposToApply = seleccionados.length > 0 ? seleccionados : [decoratorSelection];
 
     const cartItems = productos.filter(p => String(p.baseId) === String(producto.id));
-    if (cartItems.length === 0) return alert('Agrega el producto al carrito antes de decorarlo');
+    if (cartItems.length === 0) return Notifier.error('Agrega el producto al carrito antes de decorarlo');
 
     // Si no se seleccionó una línea específica y hay varias, tomar la primera
     const targetId = selectedCartItem || (cartItems[0] && (cartItems[0].cartItemId || cartItems[0].id));
-    if (!targetId) return alert('Selecciona la línea del carrito a decorar');
+    if (!targetId) return Notifier.error('Selecciona la línea del carrito a decorar');
 
     const res = decorarProducto(targetId, tiposToApply);
     if (!res.exito) {
-      alert(res.mensaje);
+      Notifier.error(res.mensaje);
     } else {
-      alert('Decoradores aplicados: ' + tiposToApply.join(', '));
+      Notifier.success('Decoradores aplicados: ' + tiposToApply.join(', '));
       // limpiar selección
       setDecoratorChecks({ envio: false, garantia: false, envoltura: false });
       setDecoratorSelection('');
@@ -234,7 +235,7 @@ const ProductDetails = () => {
                                       <span>{d.tipo}</span>
                                       <button title="Quitar decorador" onClick={async () => {
                                         const r = await quitarDecorador(ci.cartItemId || ci.id, d.tipo);
-                                        if (!r?.exito) alert(r.mensaje || 'No se pudo quitar el decorador');
+                                        if (!r?.exito) Notifier.error(r.mensaje || 'No se pudo quitar el decorador');
                                       }} style={{ background: 'transparent', border: 'none', color: '#b00000', cursor: 'pointer' }}>✕</button>
                                     </span>
                                   ))

@@ -4,6 +4,7 @@ import logo from '../logos/logo2.png';
 import { useCarrito } from '../context/CarritoContext';
 import { useCuenta } from '../context/CuentaContext';
 import { Link, useNavigate } from 'react-router-dom';
+import Notifier from '../services/Notifier';
 
 const Header = ({ darkMode, setDarkMode, screenReaderEnabled, setScreenReaderEnabled }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -83,7 +84,7 @@ const Header = ({ darkMode, setDarkMode, screenReaderEnabled, setScreenReaderEna
 
   const handleVoiceSearch = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      alert('Lo sentimos, tu navegador no soporta reconocimiento de voz. Prueba con Chrome o Edge.');
+      Notifier.error('Lo sentimos, tu navegador no soporta reconocimiento de voz. Prueba con Chrome o Edge.');
       return;
     }
 
@@ -114,9 +115,9 @@ const Header = ({ darkMode, setDarkMode, screenReaderEnabled, setScreenReaderEna
       setIsListening(false);
       console.error('Error en reconocimiento de voz:', event.error);
       if (event.error === 'no-speech') {
-        alert('No se detectó ningún audio. Por favor, intenta de nuevo.');
+        Notifier.error('No se detectó ningún audio. Por favor, intenta de nuevo.');
       } else if (event.error === 'not-allowed') {
-        alert('Permiso denegado. Por favor, habilita el micrófono en tu navegador.');
+        Notifier.error('Permiso denegado. Por favor, habilita el micrófono en tu navegador.');
       }
     };
 
@@ -302,7 +303,7 @@ const Header = ({ darkMode, setDarkMode, screenReaderEnabled, setScreenReaderEna
 
                   <button 
                     className="menu-item"
-                    onClick={() => { navigate('/historial-pedidos'); setMenuOpen(false); }}
+                    onClick={() => { navigate('/historial'); setMenuOpen(false); }}
                     onMouseEnter={() => speakText('Historial de Pedidos')}
                     onFocus={() => speakText('Historial de Pedidos')}
                   >

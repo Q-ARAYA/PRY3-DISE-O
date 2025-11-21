@@ -2,6 +2,7 @@ import React from 'react';
 import './ProductCard.css';
 import { useCarrito } from '../context/CarritoContext';
 import { Link } from 'react-router-dom';
+import Notifier from '../services/Notifier';
 
 const ProductCardFixed = ({ product }) => {
   const { id, name, price, originalPrice, rating, image, discount } = product;
@@ -15,7 +16,7 @@ const ProductCardFixed = ({ product }) => {
     e.stopPropagation();
     const resultado = agregarProducto(product, 1);
     if (!resultado?.exito) {
-      alert(resultado?.mensaje || 'No se pudo agregar el producto');
+      Notifier.error(resultado?.mensaje || 'No se pudo agregar el producto');
     }
   };
 

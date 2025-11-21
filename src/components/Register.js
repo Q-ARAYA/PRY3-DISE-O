@@ -4,7 +4,7 @@ import { useCuenta } from '../context/CuentaContext';
 import './Account.css';
 
 const Register = () => {
-  const { register } = useCuenta();
+  const { register, actualizarPerfil } = useCuenta();
   const [form, setForm] = useState({ nombre: '', email: '', password: '' });
   const [isSeller, setIsSeller] = useState(false);
   const [msg, setMsg] = useState('');
@@ -35,7 +35,13 @@ const Register = () => {
     };
     const res = register(payload);
     setMsg(res.mensaje || (res.exito ? 'Registrado' : 'Error'));
-    if (res.exito) navigate('/cuenta');
+    if (res.exito) {
+      // ensure sellerInfo is present on the stored profile (redundant but safe)
+      if (isSeller && payload.sellerInfo) {
+        try { actualizarPerfil({ sellerInfo: payload.sellerInfo }); } catch (e) {}
+      }
+      navigate('/cuenta');
+    }
   };
 
   return (
@@ -84,13 +90,13 @@ const Register = () => {
                       <option value="company">Empresa registrada</option>
                     </select>
                   </label>
+                  <label>Número de identificación fiscal
+                    <input className="form-input" name="taxId" value={sellerData.taxId} onChange={(e) => setSellerData(prev => ({ ...prev, taxId: e.target.value }))} placeholder="Cédula o NIT" required />
+                  </label>
                 </div>
                 <div className="register-column-right">
-                  <h3 className="column-title">Información Fiscal y Bancaria</h3>
-                  <label>Número de identificación fiscal<input className="form-input" name="taxId" value={sellerData.taxId} onChange={(e) => setSellerData(prev => ({ ...prev, taxId: e.target.value }))} placeholder="Cédula o NIT" required /></label>
-                  
-                  <div className="section-subtitle">Dirección comercial</div>
-                  <label>Dirección completa<input className="form-input" placeholder="Calle, número, edificio" value={sellerData.businessAddress.line1} onChange={(e) => setSellerData(prev => ({ ...prev, businessAddress: { ...prev.businessAddress, line1: e.target.value } }))} required /></label>
+                  <h3 className="column-title">Dirección e Información Bancaria</h3>
+                  <label>Dirección completa (negocio)<input className="form-input" placeholder="Calle, número, edificio" value={sellerData.businessAddress.line1} onChange={(e) => setSellerData(prev => ({ ...prev, businessAddress: { ...prev.businessAddress, line1: e.target.value } }))} required /></label>
                   <label>Provincia / Cantón / Distrito<input className="form-input" placeholder="Provincia, Cantón, Distrito" value={sellerData.businessAddress.province} onChange={(e) => setSellerData(prev => ({ ...prev, businessAddress: { ...prev.businessAddress, province: e.target.value } }))} required /></label>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                     <label>Código postal<input className="form-input" placeholder="10101" value={sellerData.businessAddress.postal} onChange={(e) => setSellerData(prev => ({ ...prev, businessAddress: { ...prev.businessAddress, postal: e.target.value } }))} required /></label>

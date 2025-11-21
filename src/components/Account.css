@@ -1,27 +1,27 @@
 .account-page {
-  padding: 0; /* Remove padding to ensure full coverage */
-  height: 100vh; /* Make the background cover the entire viewport height */
-  background: linear-gradient(rgba(0,0,0,0.32), rgba(0,0,0,0.32)), url('https://plus.unsplash.com/premium_photo-1752105780297-cd7d8617add6?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjl8fHZlcmRlJTIwZWNvbW1lcmNlfGVufDB8fDB8fHww') center/cover no-repeat;
+  padding: 3.5rem 1rem; /* breathing room at top for header */
+  min-height: 100vh; /* ensure background covers viewport */
+  background: linear-gradient(rgba(0,0,0,0.12), rgba(0,0,0,0.12)), url('https://plus.unsplash.com/premium_photo-1752105780297-cd7d8617add6?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjl8fHZlcmRlJTIwZWNvbW1lcmNlfGVufDB8fDB8fHww') center/cover no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .account-container {
   display: flex;
   width: 100%;
-  max-width: 650px;
+  max-width: 740px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-  overflow: hidden;
-  padding: 0.5rem;
-  margin: 0 auto; /* Center horizontally */
-  position: absolute;
-  top: 50%; /* Center vertically */
-  left: 50%;
-  transform: translate(-50%, -50%); /* Adjust for exact centering */
+  overflow: visible;
+  padding: 0.75rem;
+  margin: 0 auto; 
+  align-items: flex-start;
 }
 
 .account-side {
-  width: 180px;
+  width: 200px;
   background: linear-gradient(180deg,#f7fbf9,#eef7f1);
   display: flex;
   flex-direction: column;
@@ -45,8 +45,10 @@
 }
 
 .account-main {
-  flex: 1;
+  flex: 1 1 auto;
   padding: 1.25rem 1.5rem;
+  min-width: 320px;
+  max-width: 100%;
 }
 
 /* Ajuste visual: subir ligeramente el título de inicio de sesión */
@@ -60,7 +62,7 @@
 .account-form {
   display: grid;
   grid-template-columns: 1fr 1fr; /* Two columns for left and right sections */
-  gap: 1.5rem; /* Add spacing between columns */
+  gap: 1.25rem; /* Add spacing between columns */
 }
 
 .account-form label {
@@ -149,13 +151,15 @@
 
 @media (max-width:720px) {
   .seller-grid { grid-template-columns: 1fr; }
+  .account-container { padding: 0.5rem; }
+  .account-main { max-width: 100%; }
 }
 
 /* On wider viewports use two-column form layout to use horizontal space */
 @media (min-width: 900px) {
   .account-form {
     grid-template-columns: 1fr 1fr;
-    max-width: 980px;
+    max-width: 740px;
     align-items: start;
   }
 
@@ -347,23 +351,110 @@
 .media-remove-btn { background: transparent; border: 1px solid rgba(0,0,0,0.06); color: #b00000 }
 .media-remove-btn:hover { filter: brightness(0.98); }
 
+/* Enhanced media dropzone styles for SellerPublish */
+.media-dropzone {
+  border: 3px dashed #27AE60;
+  background: rgba(39,174,96,0.06);
+  padding: 22px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  gap: 10px;
+  text-align: center;
+}
+.media-dropzone .upload-placeholder { display:flex; flex-direction:column; align-items:center; gap:8px; color:#0b3d24 }
+.media-dropzone .browse-link { color: #27AE60; text-decoration: underline; cursor: pointer; font-weight: 700 }
+.media-dropzone .btn-upload { background:transparent; border: none; padding:6px 12px; border-radius:8px; color: #27AE60 }
+.media-dropzone.dragover { border-color: #27AE60; background: rgba(39,174,96,0.12); }
+
+.media-preview { position: relative; display: block; }
+.media-preview .remove-overlay {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border-radius: 999px;
+  padding: 6px 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+}
+.media-info { margin-top: 8px; font-size: 0.9rem; color: #444; display:flex; justify-content:space-between; align-items:center; gap:8px }
+.media-info .filename { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70%; }
+.media-info .filesize { font-size: 0.85rem; color: #666 }
+
+/* Toasts / notifications */
+.toast-container {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+}
+.toast {
+  min-width: 220px;
+  max-width: 360px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 6px 18px rgba(6,44,19,0.06);
+  color: #083057;
+}
+.toast-body { flex: 1; font-size: 0.95rem }
+.toast-close { background: transparent; border: none; color: inherit; font-size: 16px; cursor: pointer }
+.toast--success { background: linear-gradient(90deg, rgba(39,174,96,0.12), rgba(39,174,96,0.06)); border: 1px solid rgba(39,174,96,0.18); }
+.toast--error { background: linear-gradient(90deg, rgba(255,107,107,0.08), rgba(255,107,107,0.04)); border: 1px solid rgba(255,107,107,0.12); color: #6b1616 }
+.toast--info { background: linear-gradient(90deg, rgba(6,107,96,0.06), rgba(6,107,96,0.03)); border: 1px solid rgba(6,107,96,0.08); }
+
 /* decorator badge remove button */
 .badge button { background: transparent; border: none; color: #b00000; cursor: pointer; font-size: 12px }
 .badge { display: inline-flex; align-items: center; gap:6px; padding: 4px 8px; border-radius: 999px; background: #eef7f0; color:#0b3d24; font-weight:600 }
 
 /* Two-column layout for seller registration */
 .register-seller-expanded {
-  max-width: 1100px !important;
-  width: 92%;
+  max-width: 820px !important;
+  width: 90%;
   overflow-y: auto;
   max-height: 95vh;
+  align-self: center;
 }
 
 .register-two-column {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
+  gap: 1.6rem;
   align-items: start;
+  max-width: 740px;
+}
+
+/* Tighter layout when inside seller-card to avoid large white spaces */
+.seller-card .register-two-column {
+  gap: 1.2rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+.seller-card .register-column-left,
+.seller-card .register-column-right {
+  padding: 0;
+}
+
+.seller-card .column-title {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.05rem;
+}
+
+.seller-card .form-input {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .register-column-left,
@@ -372,6 +463,9 @@
   flex-direction: column;
   gap: 1rem;
 }
+
+/* Ensure any full-width children actually span both columns inside the grid */
+/* (removed forced full-span selector to restore pre-edit behavior) */
 
 .register-column-left label,
 .register-column-right label {
